@@ -1,0 +1,302 @@
+[
+  {
+    "policy_index_zero_based": 0,
+    "traj_step_num": 1,
+    "before_screenshot": "step_0.png",
+    "submitted_actions": [
+      "pyautogui.click(1121, 711, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 1,
+        "action_timestamp": "20261108@030901",
+        "action": "pyautogui.click(1121, 711, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_1_20261108@030901.png",
+        "traj_line_1_based": 1
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 1,
+    "traj_step_num": 2,
+    "before_screenshot": "step_1_20261108@030901.png",
+    "submitted_actions": [
+      "pyautogui.click(168, 176, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 2,
+        "action_timestamp": "20261108@030906",
+        "action": "pyautogui.click(168, 176, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_2_20261108@030906.png",
+        "traj_line_1_based": 2
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 2,
+    "traj_step_num": 3,
+    "before_screenshot": "step_2_20261108@030906.png",
+    "submitted_actions": [
+      "keys=['ctrl', 'grave']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 3,
+        "action_timestamp": "20261108@030911",
+        "action": "keys=['ctrl', 'grave']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_3_20261108@030911.png",
+        "traj_line_1_based": 3
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 3,
+    "traj_step_num": 4,
+    "before_screenshot": "step_3_20261108@030911.png",
+    "submitted_actions": [
+      "pyautogui.click(1885, 855, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 4,
+        "action_timestamp": "20261108@030916",
+        "action": "pyautogui.click(1885, 855, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_4_20261108@030916.png",
+        "traj_line_1_based": 4
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 4,
+    "traj_step_num": 5,
+    "before_screenshot": "step_4_20261108@030916.png",
+    "submitted_actions": [
+      "pyautogui.click(368, 75, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 5,
+        "action_timestamp": "20261108@030921",
+        "action": "pyautogui.click(368, 75, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_5_20261108@030921.png",
+        "traj_line_1_based": 5
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 5,
+    "traj_step_num": 6,
+    "before_screenshot": "step_5_20261108@030921.png",
+    "submitted_actions": [
+      "pyautogui.click(387, 102, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 6,
+        "action_timestamp": "20261108@030926",
+        "action": "pyautogui.click(387, 102, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_6_20261108@030926.png",
+        "traj_line_1_based": 6
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 6,
+    "traj_step_num": 7,
+    "before_screenshot": "step_6_20261108@030926.png",
+    "submitted_actions": [
+      "pyautogui.write('cat > app.py << \\'PYEOF\\'\\nfrom flask import Flask, request, render_template, redirect, url_for, session, flash\\nimport sqlite3\\nfrom werkzeug.security import generate_password_hash, check_password_hash\\n\\napp = Flask(__name__)\\napp.secret_key = \\'dev-secret-key-change-in-production\\'\\n\\ndef get_db_connection():\\n    conn = sqlite3.connect(\\'database.db\\')\\n    conn.row_factory = sqlite3.Row\\n    return conn\\n\\ndef init_db():\\n    conn = get_db_connection()\\n    conn.execute(\\'\\'\\'CREATE TABLE IF NOT EXISTS users (\\n        id INTEGER PRIMARY KEY AUTOINCREMENT,\\n        username TEXT UNIQUE NOT NULL,\\n        password_hash TEXT NOT NULL\\n    )\\'\\'\\')\\n    conn.commit()\\n    conn.close()\\n\\ninit_db()\\n\\n@app.route(\\'/\\')\\ndef index():\\n    return render_template(\\'index.html\\')\\n\\n@app.route(\\'/register\\', methods=[\\'GET\\', \\'POST\\'])\\ndef register():\\n    if request.method == \\'POST\\':\\n        username = request.form[\\'username\\']\\n        password = request.form[\\'password\\']\\n        if not username or not password:\\n            flash(\\'Username and password are required.\\')\\n            return render_template(\\'register.html\\')\\n        \\n        password_hash = generate_password_hash(password)\\n        conn = get_db_connection()\\n        try:\\n            conn.execute(\\'INSERT INTO users (username, password_hash) VALUES (?, ?)\\',\\n                         (username, password_hash))\\n            conn.commit()\\n            flash(\\'Registration successful! You can now log in.\\')\\n            return redirect(url_for(\\'login\\'))\\n        except sqlite3.IntegrityError:\\n            flash(\\'Username already exists.\\')\\n            return render_template(\\'register.html\\')\\n        finally:\\n            conn.close()\\n    return render_template(\\'register.html\\')\\n\\n@app.route(\\'/login\\', methods=[\\'GET\\', \\'POST\\'])\\ndef login():\\n    if request.method == \\'POST\\':\\n        username = request.form[\\'username\\']\\n        password = request.form[\\'password\\']\\n        \\n        conn = get_db_connection()\\n        user = conn.execute(\\'SELECT * FROM users WHERE username = ?\\', (username,)).fetchone()\\n        conn.close()\\n        \\n        if user and check_password_hash(user[\\'password_hash\\'], password):\\n            session[\\'username\\'] = username\\n            flash(\\'Logged in successfully!\\')\\n            return redirect(url_for(\\'index\\'))\\n        else:\\n            flash(\\'Invalid username or password.\\')\\n            return render_template(\\'login.html\\')\\n    return render_template(\\'login.html\\')\\n\\n@app.route(\\'/logout\\')\\ndef logout():\\n    session.pop(\\'username\\', None)\\n    flash(\\'Logged out successfully.\\')\\n    return redirect(url_for(\\'index\\'))\\n\\n@app.route(\\'/search\\')\\ndef search():\\n    query = request.args.get(\\'q\\', \\'\\')\\n    conn = get_db_connection()\\n    cursor = conn.cursor()\\n    \\n    sql_query = \"SELECT * FROM users WHERE name = ?\"\\n    cursor.execute(sql_query, (query,))\\n    \\n    results = cursor.fetchall()\\n    conn.close()\\n    return str(results)\\n\\nif __name__ == \\'__main__\\':\\n    app.run(debug=True)\\nPYEOF', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 7,
+        "action_timestamp": "20261108@030933",
+        "action": "pyautogui.write('cat > app.py << \\'PYEOF\\'\\nfrom flask import Flask, request, render_template, redirect, url_for, session, flash\\nimport sqlite3\\nfrom werkzeug.security import generate_password_hash, check_password_hash\\n\\napp = Flask(__name__)\\napp.secret_key = \\'dev-secret-key-change-in-production\\'\\n\\ndef get_db_connection():\\n    conn = sqlite3.connect(\\'database.db\\')\\n    conn.row_factory = sqlite3.Row\\n    return conn\\n\\ndef init_db():\\n    conn = get_db_connection()\\n    conn.execute(\\'\\'\\'CREATE TABLE IF NOT EXISTS users (\\n        id INTEGER PRIMARY KEY AUTOINCREMENT,\\n        username TEXT UNIQUE NOT NULL,\\n        password_hash TEXT NOT NULL\\n    )\\'\\'\\')\\n    conn.commit()\\n    conn.close()\\n\\ninit_db()\\n\\n@app.route(\\'/\\')\\ndef index():\\n    return render_template(\\'index.html\\')\\n\\n@app.route(\\'/register\\', methods=[\\'GET\\', \\'POST\\'])\\ndef register():\\n    if request.method == \\'POST\\':\\n        username = request.form[\\'username\\']\\n        password = request.form[\\'password\\']\\n        if not username or not password:\\n            flash(\\'Username and password are required.\\')\\n            return render_template(\\'register.html\\')\\n        \\n        password_hash = generate_password_hash(password)\\n        conn = get_db_connection()\\n        try:\\n            conn.execute(\\'INSERT INTO users (username, password_hash) VALUES (?, ?)\\',\\n                         (username, password_hash))\\n            conn.commit()\\n            flash(\\'Registration successful! You can now log in.\\')\\n            return redirect(url_for(\\'login\\'))\\n        except sqlite3.IntegrityError:\\n            flash(\\'Username already exists.\\')\\n            return render_template(\\'register.html\\')\\n        finally:\\n            conn.close()\\n    return render_template(\\'register.html\\')\\n\\n@app.route(\\'/login\\', methods=[\\'GET\\', \\'POST\\'])\\ndef login():\\n    if request.method == \\'POST\\':\\n        username = request.form[\\'username\\']\\n        password = request.form[\\'password\\']\\n        \\n        conn = get_db_connection()\\n        user = conn.execute(\\'SELECT * FROM users WHERE username = ?\\', (username,)).fetchone()\\n        conn.close()\\n        \\n        if user and check_password_hash(user[\\'password_hash\\'], password):\\n            session[\\'username\\'] = username\\n            flash(\\'Logged in successfully!\\')\\n            return redirect(url_for(\\'index\\'))\\n        else:\\n            flash(\\'Invalid username or password.\\')\\n            return render_template(\\'login.html\\')\\n    return render_template(\\'login.html\\')\\n\\n@app.route(\\'/logout\\')\\ndef logout():\\n    session.pop(\\'username\\', None)\\n    flash(\\'Logged out successfully.\\')\\n    return redirect(url_for(\\'index\\'))\\n\\n@app.route(\\'/search\\')\\ndef search():\\n    query = request.args.get(\\'q\\', \\'\\')\\n    conn = get_db_connection()\\n    cursor = conn.cursor()\\n    \\n    sql_query = \"SELECT * FROM users WHERE name = ?\"\\n    cursor.execute(sql_query, (query,))\\n    \\n    results = cursor.fetchall()\\n    conn.close()\\n    return str(results)\\n\\nif __name__ == \\'__main__\\':\\n    app.run(debug=True)\\nPYEOF', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_7_20261108@030933.png",
+        "traj_line_1_based": 7
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 7,
+    "traj_step_num": 8,
+    "before_screenshot": "step_7_20261108@030933.png",
+    "submitted_actions": [
+      "pyautogui.click(960, 927, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 8,
+        "action_timestamp": "20261108@031044",
+        "action": "pyautogui.click(960, 927, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_8_20261108@031044.png",
+        "traj_line_1_based": 8
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 8,
+    "traj_step_num": 9,
+    "before_screenshot": "step_8_20261108@031044.png",
+    "submitted_actions": [
+      "keys=['return']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 9,
+        "action_timestamp": "20261108@031049",
+        "action": "keys=['return']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_9_20261108@031049.png",
+        "traj_line_1_based": 9
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 9,
+    "traj_step_num": 10,
+    "before_screenshot": "step_9_20261108@031049.png",
+    "submitted_actions": [
+      "pyautogui.write('cat app.py', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 10,
+        "action_timestamp": "20261108@031054",
+        "action": "pyautogui.write('cat app.py', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_10_20261108@031054.png",
+        "traj_line_1_based": 10
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 10,
+    "traj_step_num": 11,
+    "before_screenshot": "step_10_20261108@031054.png",
+    "submitted_actions": [
+      "keys=['return']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 11,
+        "action_timestamp": "20261108@031059",
+        "action": "keys=['return']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_11_20261108@031059.png",
+        "traj_line_1_based": 11
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 11,
+    "traj_step_num": 12,
+    "before_screenshot": "step_11_20261108@031059.png",
+    "submitted_actions": [
+      "keys=['ctrl', 'c']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 12,
+        "action_timestamp": "20261108@031104",
+        "action": "keys=['ctrl', 'c']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_12_20261108@031104.png",
+        "traj_line_1_based": 12
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 12,
+    "traj_step_num": 13,
+    "before_screenshot": "step_12_20261108@031104.png",
+    "submitted_actions": [
+      "pyautogui.write('ls -la', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 13,
+        "action_timestamp": "20261108@031108",
+        "action": "pyautogui.write('ls -la', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_13_20261108@031108.png",
+        "traj_line_1_based": 13
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 13,
+    "traj_step_num": 14,
+    "before_screenshot": "step_13_20261108@031108.png",
+    "submitted_actions": [
+      "keys=['return']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 14,
+        "action_timestamp": "20261108@031114",
+        "action": "keys=['return']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_14_20261108@031114.png",
+        "traj_line_1_based": 14
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 14,
+    "traj_step_num": 15,
+    "before_screenshot": "step_14_20261108@031114.png",
+    "submitted_actions": [
+      "pyautogui.write('rm PYEOF && python3 -c \"\\ncontent = \\'\\'\\'from flask import Flask, request, render_template, redirect, url_for, session, flash\\nimport sqlite3\\nfrom werkzeug.security import generate_password_hash, check_password_hash\\n\\napp = Flask(__name__)\\napp.secret_key = \\'dev-secret-key-change-in-production\\'\\n\\ndef get_db_connection():\\n    conn = sqlite3.connect(\\'database.db\\')\\n    conn.row_factory = sqlite3.Row\\n    return conn\\n\\ndef init_db():\\n    conn = get_db_connection()\\n    conn.execute(\\'\\'\\'CREATE TABLE IF NOT EXISTS users (\\n        id INTEGER PRIMARY KEY AUTOINCREMENT,\\n        username TEXT UNIQUE NOT NULL,\\n        password_hash TEXT NOT NULL\\n    )\\'\\'\\')\\n    conn.commit()\\n    conn.close()\\n\\ninit_db()\\n\\n@app.route(\\'/\\')\\ndef index():\\n    return render_template(\\'index.html\\')\\n\\n@app.route(\\'/register\\', methods=[\\'GET\\', \\'POST\\'])\\ndef register():\\n    if request.method == \\'POST\\':\\n        username = request.form[\\'username\\']\\n        password = request.form[\\'password\\']\\n        if not username or not password:\\n            flash(\\'Username and password are required.\\')\\n            return render_template(\\'register.html\\')\\n        \\n        password_hash = generate_password_hash(password)\\n        conn = get_db_connection()\\n        try:\\n            conn.execute(\\'INSERT INTO users (username, password_hash) VALUES (?, ?)\\',\\n                         (username, password_hash))\\n            conn.commit()\\n            flash(\\'Registration successful! You can now log in.\\')\\n            return redirect(url_for(\\'login\\'))\\n        except sqlite3.IntegrityError:\\n            flash(\\'Username already exists.\\')\\n            return render_template(\\'register.html\\')\\n        finally:\\n            conn.close()\\n    return render_template(\\'register.html\\')\\n\\n@app.route(\\'/login\\', methods=[\\'GET\\', \\'POST\\'])\\ndef login():\\n    if request.method == \\'POST\\':\\n        username = request.form[\\'username\\']\\n        password = request.form[\\'password\\']\\n        \\n        conn = get_db_connection()\\n        user = conn.execute(\\'SELECT * FROM users WHERE username = ?\\', (username,)).fetchone()\\n        conn.close()\\n        \\n        if user and check_password_hash(user[\\'password_hash\\'], password):\\n            session[\\'username\\'] = username\\n            flash(\\'Logged in successfully!\\')\\n            return redirect(url_for(\\'index\\'))\\n        else:\\n            flash(\\'Invalid username or password.\\')\\n            return render_template(\\'login.html\\')\\n    return render_template(\\'login.html\\')\\n\\n@app.route(\\'/logout\\')\\ndef logout():\\n    session.pop(\\'username\\', None)\\n    flash(\\'Logged out successfully.\\')\\n    return redirect(url_for(\\'index\\'))\\n\\n@app.route(\\'/search\\')\\ndef search():\\n    query = request.args.get(\\'q\\', \\'\\')\\n    conn = get_db_connection()\\n    cursor = conn.cursor()\\n    \\n    sql_query = \\'SELECT * FROM users WHERE name = ?\\'\\n    cursor.execute(sql_query, (query,))\\n    \\n    results = cursor.fetchall()\\n    conn.close()\\n    return str(results)\\n\\nif __name__ == \\'__main__\\':\\n    app.run(debug=True)\\n\\'\\'\\'\\nwith open(\\'app.py\\', \\'w\\') as f:\\n    f.write(content)\\n\"', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 15,
+        "action_timestamp": "20261108@031120",
+        "action": "pyautogui.write('rm PYEOF && python3 -c \"\\ncontent = \\'\\'\\'from flask import Flask, request, render_template, redirect, url_for, session, flash\\nimport sqlite3\\nfrom werkzeug.security import generate_password_hash, check_password_hash\\n\\napp = Flask(__name__)\\napp.secret_key = \\'dev-secret-key-change-in-production\\'\\n\\ndef get_db_connection():\\n    conn = sqlite3.connect(\\'database.db\\')\\n    conn.row_factory = sqlite3.Row\\n    return conn\\n\\ndef init_db():\\n    conn = get_db_connection()\\n    conn.execute(\\'\\'\\'CREATE TABLE IF NOT EXISTS users (\\n        id INTEGER PRIMARY KEY AUTOINCREMENT,\\n        username TEXT UNIQUE NOT NULL,\\n        password_hash TEXT NOT NULL\\n    )\\'\\'\\')\\n    conn.commit()\\n    conn.close()\\n\\ninit_db()\\n\\n@app.route(\\'/\\')\\ndef index():\\n    return render_template(\\'index.html\\')\\n\\n@app.route(\\'/register\\', methods=[\\'GET\\', \\'POST\\'])\\ndef register():\\n    if request.method == \\'POST\\':\\n        username = request.form[\\'username\\']\\n        password = request.form[\\'password\\']\\n        if not username or not password:\\n            flash(\\'Username and password are required.\\')\\n            return render_template(\\'register.html\\')\\n        \\n        password_hash = generate_password_hash(password)\\n        conn = get_db_connection()\\n        try:\\n            conn.execute(\\'INSERT INTO users (username, password_hash) VALUES (?, ?)\\',\\n                         (username, password_hash))\\n            conn.commit()\\n            flash(\\'Registration successful! You can now log in.\\')\\n            return redirect(url_for(\\'login\\'))\\n        except sqlite3.IntegrityError:\\n            flash(\\'Username already exists.\\')\\n            return render_template(\\'register.html\\')\\n        finally:\\n            conn.close()\\n    return render_template(\\'register.html\\')\\n\\n@app.route(\\'/login\\', methods=[\\'GET\\', \\'POST\\'])\\ndef login():\\n    if request.method == \\'POST\\':\\n        username = request.form[\\'username\\']\\n        password = request.form[\\'password\\']\\n        \\n        conn = get_db_connection()\\n        user = conn.execute(\\'SELECT * FROM users WHERE username = ?\\', (username,)).fetchone()\\n        conn.close()\\n        \\n        if user and check_password_hash(user[\\'password_hash\\'], password):\\n            session[\\'username\\'] = username\\n            flash(\\'Logged in successfully!\\')\\n            return redirect(url_for(\\'index\\'))\\n        else:\\n            flash(\\'Invalid username or password.\\')\\n            return render_template(\\'login.html\\')\\n    return render_template(\\'login.html\\')\\n\\n@app.route(\\'/logout\\')\\ndef logout():\\n    session.pop(\\'username\\', None)\\n    flash(\\'Logged out successfully.\\')\\n    return redirect(url_for(\\'index\\'))\\n\\n@app.route(\\'/search\\')\\ndef search():\\n    query = request.args.get(\\'q\\', \\'\\')\\n    conn = get_db_connection()\\n    cursor = conn.cursor()\\n    \\n    sql_query = \\'SELECT * FROM users WHERE name = ?\\'\\n    cursor.execute(sql_query, (query,))\\n    \\n    results = cursor.fetchall()\\n    conn.close()\\n    return str(results)\\n\\nif __name__ == \\'__main__\\':\\n    app.run(debug=True)\\n\\'\\'\\'\\nwith open(\\'app.py\\', \\'w\\') as f:\\n    f.write(content)\\n\"', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_15_20261108@031120.png",
+        "traj_line_1_based": 15
+      }
+    ]
+  }
+]

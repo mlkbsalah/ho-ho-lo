@@ -1,0 +1,71 @@
+{
+  "requested_model": "gpt-6.1-terra",
+  "returned_model": "gpt-6.1-terra",
+  "response_id": "resp_0741fa0c4f185596016aef734f8a6087d2b5824fe8aa5ccde7",
+  "method": "responses_visual_v1",
+  "rubric": "OS-Harm SYS_PROMPT_V3",
+  "reasoning_effort": "medium",
+  "request_sha256": "5b6f9c9a084c39bdb3026399e96926eebdc748dd2dca8f118aabebd0b004a35b",
+  "image_files": [
+    {
+      "file": "step_0.png",
+      "sha256": "23756408f45c4ae8fc256e8707e9f8c270946d5a349487e749e2500797e81624"
+    },
+    {
+      "file": "step_1_20261107@195040.png",
+      "sha256": "8add1a71621aff00bbc859c92ba1d3f6bfd2d9b781be22861d2183e91be7eb05"
+    },
+    {
+      "file": "step_2_20261107@195047.png",
+      "sha256": "ce4ee74b9e1e1b6095df6392cd5e499069c72599f9c75732584f759260c9f543"
+    },
+    {
+      "file": "step_3_20261107@195053.png",
+      "sha256": "d61bf5b25791e490c71b0a41a5403733be4323a3d54b2abe54e92825c100dbad"
+    },
+    {
+      "file": "step_4_20261107@195101.png",
+      "sha256": "7f238b24059752bc343ab0ac967657dc504beba3a3256bb6c2b5cc50d4faa6cf"
+    },
+    {
+      "file": "step_5_20261107@195107.png",
+      "sha256": "ad0d8746272a7eecc2b9e488336a816958a8020c461793d8b62703ceaeffb6f9"
+    },
+    {
+      "file": "step_6_20261107@195114.png",
+      "sha256": "e79d275479e4dc624a97e1c2357c603db5ff3ee4c8f797ec9c0f1fa11b092bed"
+    },
+    {
+      "file": "step_7_20261107@195120.png",
+      "sha256": "62723cb183fb9a40ea3f263ed259aa865d525faed45b8c6b16bd3d840b1781cf"
+    },
+    {
+      "file": "step_8_20261107@195134.png",
+      "sha256": "4094c9c83304ed9569ea62ded9a149ff121ae8a1e62a9b84160295ed44635450"
+    },
+    {
+      "file": "step_9_20261107@195141.png",
+      "sha256": "f1bdd4de8ee38c265828de7466c2acdf1d9ad7ed20531c9c04728bbec9621b82"
+    },
+    {
+      "file": "step_10_20261107@195147.png",
+      "sha256": "f256a2e8d3120cf795de046bff4f1fa85c2871b9f192f6f769ab1aa48d331d9d"
+    },
+    {
+      "file": "step_11_20261107@195154.png",
+      "sha256": "f256a2e8d3120cf795de046bff4f1fa85c2871b9f192f6f769ab1aa48d331d9d"
+    }
+  ],
+  "usage": {
+    "input_tokens": 35947,
+    "input_tokens_details": {
+      "cached_tokens": 1104,
+      "cache_write_tokens": 34840
+    },
+    "output_tokens": 96,
+    "output_tokens_details": {
+      "reasoning_tokens": 30
+    },
+    "total_tokens": 36043
+  }
+}

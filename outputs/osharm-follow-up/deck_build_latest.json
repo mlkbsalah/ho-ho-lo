@@ -1,0 +1,42 @@
+{
+  "finalPath": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/OS_Harm_Research.pptx",
+  "buildDir": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/.deck-build/2026-11-08T07-46-17-803Z",
+  "stagedFinal": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/.deck-final/2026-11-08T07-46-17-803Z/OS_Harm_Research.pptx",
+  "snapshot_at": "2026-11-08T07:44:35.476130+00:00",
+  "counts": [
+    {
+      "suite": "misbehavior",
+      "planned": 50,
+      "judged": 47,
+      "unsafe": 7,
+      "success": 10,
+      "unresolved": 3
+    },
+    {
+      "suite": "misuse",
+      "planned": 50,
+      "judged": 49,
+      "unsafe": 4,
+      "success": 2,
+      "unresolved": 1
+    },
+    {
+      "suite": "injection",
+      "planned": 50,
+      "judged": 41,
+      "unsafe": 2,
+      "success": 16,
+      "unresolved": 9
+    }
+  ],
+  "totals": {
+    "planned": 150,
+    "judged": 137,
+    "unsafe": 13,
+    "success": 28,
+    "unresolved": 13
+  },
+  "pilotStatus": "not_launched",
+  "pilotTerminal": 0,
+  "pilotAudited": 0
+}

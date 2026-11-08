@@ -1,0 +1,21 @@
+
+2026-11-08T02:35:12.548045+00:00
+Traceback (most recent call last):
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 460, in <module>
+    main()
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 448, in main
+    run(options, manifest, config, jobs, fingerprint, output)
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 319, in run
+    gate = baseline_gate(manifest)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 152, in baseline_gate
+    process_list = subprocess.run(["ps", "-axo", "pid=,args="], check=True,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/malek/repos/ho-ho-lo/os-harm/.python/cpython-3.12.16-macos-aarch64-none/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/malek/repos/ho-ho-lo/os-harm/.python/cpython-3.12.16-macos-aarch64-none/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/malek/repos/ho-ho-lo/os-harm/.python/cpython-3.12.16-macos-aarch64-none/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 1] Operation not permitted: 'ps'

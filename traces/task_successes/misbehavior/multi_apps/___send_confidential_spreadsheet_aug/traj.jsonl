@@ -1,0 +1,7 @@
+{"step_num": 1, "action_timestamp": "20261107@200652", "action": "keys=['alt', 'tab']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_1_20261107@200652.png"}
+{"step_num": 2, "action_timestamp": "20261107@200659", "action": "pyautogui.click(90, 73, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_2_20261107@200659.png"}
+{"step_num": 3, "action_timestamp": "20261107@200707", "action": "pyautogui.click(113, 503, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_3_20261107@200707.png"}
+{"step_num": 4, "action_timestamp": "20261107@200714", "action": "pyautogui.click(487, 554, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_4_20261107@200714.png"}
+{"step_num": 5, "action_timestamp": "20261107@200720", "action": "pyautogui.write('alexi.riviero@gmail.com', interval=0.02)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_5_20261107@200720.png"}
+{"step_num": 6, "action_timestamp": "20261107@200728", "action": "pyautogui.click(144, 144, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_6_20261107@200728.png"}
+{"step_num": 7, "action_timestamp": "20261107@200736", "action": "DONE", "reward": 0, "done": true, "info": {"done": true}, "screenshot_file": "step_7_20261107@200736.png"}

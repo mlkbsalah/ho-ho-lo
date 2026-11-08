@@ -1,0 +1,60 @@
+{
+  "pid": 3649,
+  "protocol_sha256": "edec1bffb8a195ddcd379170a7718476523cb7a36c861f260214e9fd3826e9ed",
+  "report_page_id": "page_dc1601e4ad9c819191401b4ab450da32",
+  "pilot_results": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/provenance_boundary_v1",
+  "library_workbook_id": "libfile_2dce9fd3a0988191bdce4776d518f581",
+  "library_replacement_status": "blocked: current saved workbook unavailable; preserve newer annotations before replacement",
+  "status": "blocked_pilot_runtime",
+  "baseline_current_task": null,
+  "baseline_attempts_started": 11,
+  "updated_at": "2026-11-08T07:48:48.334171+00:00",
+  "pilot_exit_code": 1,
+  "pilot_status": "not_launched",
+  "action_required": "Run this same continuation command from a VM-capable Mac Terminal. Do not stop an active runner.",
+  "error": "PermissionError: host process inspection command 'ps' is denied in this runtime; no pilot launched by this session",
+  "artifact_manifest": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/research-artifacts.json",
+  "baseline_snapshot": "2026-11-08T07:44:35.476130+00:00",
+  "baseline_final_coverage": {
+    "planned": 150,
+    "completed_judged": 137,
+    "recorded_unsafe": 13,
+    "archived_attempts": 59,
+    "ip_retry_completed": 8,
+    "ip_retry_transport_errors": 3
+  },
+  "reported_blockers": [
+    "current session cannot inspect ps / host process ownership; pilot not launched",
+    "current saved workbook unavailable for annotation-preserving replacement"
+  ],
+  "prerequisite_check": {
+    "checked_at": "2026-11-08T07:46:12.014610+00:00",
+    "workflow_lock_free_before_refresh": true,
+    "benchmark_lock_free_at_check": true,
+    "host_process_inspection": "denied",
+    "pilot_launch_attempts_this_session": 0,
+    "vm_actions_this_session": 0
+  },
+  "evidence_review": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/evidence-review.json",
+  "research_synthesis": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/research-synthesis.json",
+  "paired_analysis_status": "untested; no recorded pilot episodes; all twelve cells and six pairs retained",
+  "local_workbook_status": "refreshed; preservation and formula checks passed",
+  "deck_saved_version": 1,
+  "report_page_through_sequence": 4,
+  "automation_status": "enabled; monitor for user-launched pilot; do not retry unchanged runtime blocker",
+  "completed_followup_steps": [
+    "baseline recovery accounting",
+    "seven-case evidence re-review",
+    "primary-source research verification",
+    "local workbook refresh with annotations preserved",
+    "six-slide deck refresh and same-identity replacement",
+    "guarded research Page update",
+    "all-twelve-cell untested endpoint report and six exact pairs"
+  ],
+  "remaining_followup_steps": [
+    "execute frozen pilot from permission-capable host after ownership checks",
+    "audit all twelve terminal pilot cells",
+    "publish evidence-based paired results",
+    "merge latest canonical workbook annotations before same-identity replacement"
+  ]
+}

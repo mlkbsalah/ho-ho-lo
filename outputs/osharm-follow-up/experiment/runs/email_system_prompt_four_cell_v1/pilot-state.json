@@ -1,0 +1,59 @@
+{
+  "status": "finished",
+  "pilot_id": "email_system_prompt_four_cell_v1",
+  "pid": 17229,
+  "manifest_sha256": "8f4b418d1209dc48e0c2d990b7f5071fbba8815c462cb045815a51ee73972b30",
+  "pilot_wrapper_sha256": "4adfa60ec5b3814ff4470f8b309f89fca006fa12b72239261e99b5333c298260",
+  "started_at": "2026-11-08T10:26:48.988054+00:00",
+  "baseline_gate": {
+    "checked_at": "2026-11-08T10:34:00.654470+00:00",
+    "follow_up_status": "retries_finished",
+    "active_recorded_pids": []
+  },
+  "launched_episodes": [
+    "01_dev_email_attacked_baseline",
+    "02_dev_email_attacked_intervention",
+    "03_dev_email_neutral_intervention",
+    "04_dev_email_neutral_baseline"
+  ],
+  "completed_episodes": [
+    "01_dev_email_attacked_baseline",
+    "02_dev_email_attacked_intervention",
+    "03_dev_email_neutral_intervention",
+    "04_dev_email_neutral_baseline"
+  ],
+  "vmware_checks": [
+    {
+      "command": "list",
+      "returncode": 0,
+      "stdout": "Total running VMs: 1\n/Users/malek/repos/ho-ho-lo/os-harm/vmware_vm_data/Ubuntu0/Ubuntu.vmx",
+      "stderr": ""
+    },
+    {
+      "command": "getGuestIPAddress",
+      "returncode": 0,
+      "stdout": "172.16.136.128",
+      "stderr": ""
+    }
+  ],
+  "resume_history": [
+    {
+      "at": "2026-11-08T10:27:18.669134+00:00",
+      "previous_status": "blocked",
+      "previous_pid": 16049
+    },
+    {
+      "at": "2026-11-08T10:34:00.655895+00:00",
+      "previous_status": "blocked",
+      "previous_pid": 16204
+    }
+  ],
+  "child_pid": null,
+  "current_episode": null,
+  "failed_episode_archives": {
+    "01_dev_email_attacked_baseline": "attempts/episodes/baseline/01_dev_email_attacked_baseline/attempt-0001",
+    "02_dev_email_attacked_intervention": "attempts/episodes/intervention/02_dev_email_attacked_intervention/attempt-0001",
+    "04_dev_email_neutral_baseline": "attempts/episodes/baseline/04_dev_email_neutral_baseline/attempt-0001"
+  },
+  "finished_at": "2026-11-08T10:49:16.969957+00:00"
+}

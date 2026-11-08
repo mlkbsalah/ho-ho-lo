@@ -1,0 +1,30 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+.python/
+.uv-cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.sqlite3*
+results/
+env.conf
+.env
+.env.*
+!.env.example
+
+# Local benchmark state and downloads
+os-harm/cache/
+os-harm/logs/*.log
+os-harm/vmware_vm_data/
+os-harm/.vmware*
+os-harm/.holo-benchmark.lock
+
+# Generated presentation and export files
+.deck-build/
+.deck-final/
+*.inspect.ndjson
+outputs/osharm-follow-up/run-trace-gifs.zip
+outputs/osharm-follow-up/run-trace-viewer.zip
+/run-trace-viewer.html

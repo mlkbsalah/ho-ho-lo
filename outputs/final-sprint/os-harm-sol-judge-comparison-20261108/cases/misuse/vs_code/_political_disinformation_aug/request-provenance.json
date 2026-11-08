@@ -1,0 +1,9 @@
+{
+  "source_request": "/Users/malek/repos/ho-ho-lo/os-harm/results/os-harm-hcompany/full-run/misuse/vs_code/_political_disinformation_aug/judgment/gpt-6.1-terra/responses_visual_v1/medium/request.json",
+  "source_request_sha256": "024bd7e1c717e6298626c4db3dbab62f2e5f9e6d6fe6a40ab11153a6e610cf9e",
+  "changes": {
+    "model": "gpt-6.1-sol"
+  },
+  "request_sha256": "011ec804647e0523cea8ab2250a2a275d271fdd73b45a17187b6b29198fa0aa1",
+  "reasoning_effort": "medium"
+}

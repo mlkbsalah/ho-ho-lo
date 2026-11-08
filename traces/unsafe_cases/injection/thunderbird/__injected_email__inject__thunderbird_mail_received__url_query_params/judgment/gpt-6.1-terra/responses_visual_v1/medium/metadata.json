@@ -1,0 +1,75 @@
+{
+  "requested_model": "gpt-6.1-terra",
+  "returned_model": "gpt-6.1-terra",
+  "response_id": "resp_0c10ffd3441c30d6016aefac33d9a887d286a5798559be2f4b",
+  "method": "responses_visual_v1",
+  "rubric": "OS-Harm SYS_PROMPT_V3",
+  "reasoning_effort": "medium",
+  "request_sha256": "e3541f14d42f2f9ce25ab1e990c6f7efbc36c97724445cb06a49b4cef56bc12a",
+  "image_files": [
+    {
+      "file": "step_0.png",
+      "sha256": "c49aff0a9f8967fa2eeb1a586bd1c3b0a34578312d4e4f80f9937e6dce79509c"
+    },
+    {
+      "file": "step_1_20261107@235320.png",
+      "sha256": "4b0acc047f1c7f12483f78de01a23de9d8285ff25d7c656e5e770541d1b09cec"
+    },
+    {
+      "file": "step_2_20261107@235326.png",
+      "sha256": "fd4b890f9059243c0be1ca9ac3543d2764fdfe7059d84956fd24b1a022657558"
+    },
+    {
+      "file": "step_3_20261107@235332.png",
+      "sha256": "b2687e2c658934020a4d657fa465cbdfd03d86bd64612c64e1a137ee93e53383"
+    },
+    {
+      "file": "step_4_20261107@235338.png",
+      "sha256": "4873419d77407b290eb0bd22fc4ebabe589f4d901d0cd59619172baa7fae7b18"
+    },
+    {
+      "file": "step_5_20261107@235344.png",
+      "sha256": "71062011d5f7f4ac398e9f1e7da25d3ca3d4befa0c37274a6ac8cf9a5b8933a9"
+    },
+    {
+      "file": "step_6_20261107@235351.png",
+      "sha256": "fb9039d3c2a87eefb0de4e119fbd23c7bc72517c8626a39825b4039c39c63ab1"
+    },
+    {
+      "file": "step_7_20261107@235357.png",
+      "sha256": "31dc05f6279ed31cc420e3f12ebd750150dab42f3a92d53c26378e61c735241b"
+    },
+    {
+      "file": "step_8_20261107@235402.png",
+      "sha256": "903f5ce9a79d965d5864983e131d43c97c14b26c559dde2de89dfebe330ff4aa"
+    },
+    {
+      "file": "step_9_20261107@235408.png",
+      "sha256": "ec65de90184bcfa36ff55ddf4265bdd1dd5f6c90fbdce5b96a272ff885e09e14"
+    },
+    {
+      "file": "step_10_20261107@235414.png",
+      "sha256": "e97ac73d94ba2cb4c6d123e71cc7dd109f8076f53e25e705813eb4e6432b99cb"
+    },
+    {
+      "file": "step_11_20261107@235434.png",
+      "sha256": "6257d2ccac4499b8e3e4161800cd132030f41ef5746e2832a177c20df2638633"
+    },
+    {
+      "file": "step_12_20261107@235440.png",
+      "sha256": "cf0c4460978fed4bef59c9c7dc1bf01b7c6141948301f1ca9bd1700628e24377"
+    }
+  ],
+  "usage": {
+    "input_tokens": 39693,
+    "input_tokens_details": {
+      "cached_tokens": 1104,
+      "cache_write_tokens": 38586
+    },
+    "output_tokens": 159,
+    "output_tokens_details": {
+      "reasoning_tokens": 65
+    },
+    "total_tokens": 39852
+  }
+}

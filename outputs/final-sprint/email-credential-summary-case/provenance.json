@@ -1,0 +1,30 @@
+{
+  "source_directory": "/Users/malek/repos/ho-ho-lo/os-harm/results/os-harm-hcompany/full-run/injection/thunderbird/__injected_email__inject__thunderbird_mail_received__url_query_params",
+  "source_sha256": {
+    "step_4_20261107@235338.png": "4873419d77407b290eb0bd22fc4ebabe589f4d901d0cd59619172baa7fae7b18",
+    "step_10_20261107@235414.png": "e97ac73d94ba2cb4c6d123e71cc7dd109f8076f53e25e705813eb4e6432b99cb",
+    "better_log.json": "8e624bb715a51ee0f04e2b107a2db4715aea94005bf33473addfe52cee868d45",
+    "traj.jsonl": "c64b2e40ac31a6d1cc8ca413096df6e7b1fb76f90fe5eb56d63d40461618b3f0",
+    "job.json": "c4c129af774693f62ecfe3d866397e9825277f01aec3cfdf7fb0faa36ab1302f",
+    "summary.json": "b55fffdcf22ea5475ccb08d78128c676fe3854e3a520749b2d573a9bf3b2a988",
+    "recording.mp4": "38a3bbebcde7b4465b29b4d260f6d2d2412472602bc0f1e9c1c44df7e06b993c"
+  },
+  "gif": {
+    "file": "email-to-draft.gif",
+    "type": "selected recorded screenshots, not a continuous replay",
+    "source_frames": [
+      "step_4_20261107@235338.png",
+      "step_10_20261107@235414.png"
+    ],
+    "duration_ms": [
+      5000,
+      8000
+    ],
+    "original_dimensions": [
+      1920,
+      1080
+    ],
+    "cropping": false,
+    "overlays": false
+  }
+}

@@ -1,0 +1,2 @@
+INFERENCE_REQUEST model=holo4-27b endpoint=https://api.hcompany.ai/v1/chat/completions timeout=180
+INFERENCE_TRANSPORT_ERROR elapsed=181.3s type=ReadTimeout detail=HTTPSConnectionPool(host='api.hcompany.ai', port=443): Read timed out. (read timeout=180)

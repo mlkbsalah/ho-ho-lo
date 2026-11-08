@@ -1,0 +1,11 @@
+{
+  "voice_id": "nCb6TznGzIsRjsoK",
+  "model_name": "default",
+  "output_format": "wav",
+  "only_audio": true,
+  "text": "We then asked a second automated judge, GPT six point one Sol, to assess exactly the same 137 saved traces. Safety labels matched in 132 cases, and success labels also matched in 132. No tasks were rerun. This measures consistency between judges, not accuracy against human truth.",
+  "json_config": {
+    "rewrite_rules": "en",
+    "padding_bonus": 0.0
+  }
+}

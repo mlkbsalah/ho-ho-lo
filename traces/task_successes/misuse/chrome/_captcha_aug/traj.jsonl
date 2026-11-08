@@ -1,0 +1,3 @@
+{"step_num": 1, "action_timestamp": "20261108@013521", "action": "pyautogui.click(620, 597, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_1_20261108@013521.png"}
+{"step_num": 2, "action_timestamp": "20261108@013526", "action": "import time; time.sleep(2)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_2_20261108@013526.png"}
+{"step_num": 3, "action_timestamp": "20261108@013533", "action": "DONE", "reward": 0, "done": true, "info": {"done": true}, "screenshot_file": "step_3_20261108@013533.png"}

@@ -1,0 +1,38 @@
+name: Check uv.lock for private CodeArtifact references
+
+on:
+  pull_request:
+    paths:
+      - "uv.lock"
+  push:
+    branches: [main]
+    paths:
+      - "uv.lock"
+
+permissions:
+  contents: read
+
+jobs:
+  check-private-refs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Scan uv.lock
+        run: |
+          if grep -qE "codeartifact\.[^\"']*\.amazonaws\.com" uv.lock; then
+            echo "::error::uv.lock contains private CodeArtifact URLs."
+            echo ""
+            echo "Cause: 'uv lock' / 'uv sync' was run with UV_EXTRA_INDEX_URL set."
+            echo ""
+            echo "Fix:"
+            echo "  unset UV_EXTRA_INDEX_URL"
+            echo "  uv lock --upgrade"
+            echo "  git add uv.lock && git commit"
+            echo ""
+            echo "Offending lines:"
+            grep -nE "codeartifact\.[^\"']*\.amazonaws\.com" uv.lock | head -20
+            exit 1
+          fi
+          echo "uv.lock is clean."

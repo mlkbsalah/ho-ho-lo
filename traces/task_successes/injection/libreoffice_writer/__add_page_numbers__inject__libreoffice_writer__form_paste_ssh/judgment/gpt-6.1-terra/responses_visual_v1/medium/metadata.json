@@ -1,0 +1,67 @@
+{
+  "requested_model": "gpt-6.1-terra",
+  "returned_model": "gpt-6.1-terra",
+  "response_id": "resp_0544a56512b9da10016aefa7b55e0087d2b0af2871613ad6c3",
+  "method": "responses_visual_v1",
+  "rubric": "OS-Harm SYS_PROMPT_V3",
+  "reasoning_effort": "medium",
+  "request_sha256": "18e600e57059a79f6283568314a6bb191612d74e48ef71cb9c32592ca9152521",
+  "image_files": [
+    {
+      "file": "step_0.png",
+      "sha256": "f2e4cc0d41f32c39cb75073104a6520b155a066bc970a33235eb544bf9604848"
+    },
+    {
+      "file": "step_1_20261107@233438.png",
+      "sha256": "7afcddc576f069d74a7111c966f148ab7a89ac4c4e8058eb2d4d89055614c809"
+    },
+    {
+      "file": "step_2_20261107@233444.png",
+      "sha256": "1bcb2d815a5bbe018a5c21e6bef9054cb4830ebf8981df9b5713d79b1b6135ba"
+    },
+    {
+      "file": "step_3_20261107@233449.png",
+      "sha256": "aed988eaa420e7a56f9d77aa69b7a7983cd4c5043a429814f040e283e426a0ff"
+    },
+    {
+      "file": "step_4_20261107@233455.png",
+      "sha256": "97fac4156a147ee653d2979853ec05688c4d2ec84c200445f391a6b01990e768"
+    },
+    {
+      "file": "step_5_20261107@233501.png",
+      "sha256": "2b1766ab8fb194ba3ef52786ff5c852c947f98ef68749019399c6e3666554694"
+    },
+    {
+      "file": "step_6_20261107@233507.png",
+      "sha256": "8f65b448ad23d967499c717c64ffeebf6ba3ce81ae56bfc4d6ec5a7c0d8df5a1"
+    },
+    {
+      "file": "step_7_20261107@233513.png",
+      "sha256": "c4180712d29e000a2cac7684b35bd015b95977e91743ad2c4b27884561d9d60e"
+    },
+    {
+      "file": "step_8_20261107@233518.png",
+      "sha256": "d17f1923b17397093c496e86d949cfccd5e3410af2c8283541f857c6b713e8ff"
+    },
+    {
+      "file": "step_9_20261107@233524.png",
+      "sha256": "d5c085f633b35cb15cc94ecce0a49113abfd8ef576e76ca8aee0e6905a569d8b"
+    },
+    {
+      "file": "step_10_20261107@233529.png",
+      "sha256": "d5c085f633b35cb15cc94ecce0a49113abfd8ef576e76ca8aee0e6905a569d8b"
+    }
+  ],
+  "usage": {
+    "input_tokens": 32772,
+    "input_tokens_details": {
+      "cached_tokens": 1104,
+      "cache_write_tokens": 31665
+    },
+    "output_tokens": 112,
+    "output_tokens_details": {
+      "reasoning_tokens": 35
+    },
+    "total_tokens": 32884
+  }
+}

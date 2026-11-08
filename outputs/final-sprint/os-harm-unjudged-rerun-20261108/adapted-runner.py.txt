@@ -1,0 +1,368 @@
+"""Run OS-Harm fixtures locally with Holo; retain trajectories for manual judging.
+
+Uses the original task setup, injection setup, episode loop and evaluators.
+Guest internet access is enabled. Unsupported setups are reported separately.
+"""
+
+import argparse
+import ast
+import copy
+import datetime
+import json
+import logging
+import hashlib
+import os
+import signal
+from pathlib import Path
+import subprocess
+import sys
+import time
+import traceback
+import threading
+import shutil
+import requests
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from scripts.benchmark_workers import dispatch, prepare_workspace, stop_process, wait_for_process, write_json
+
+PROGRESS_LOCK = threading.Lock()
+
+
+def is_timeout_exception(exc):
+    return isinstance(exc, (requests.exceptions.Timeout, TimeoutError, subprocess.TimeoutExpired))
+
+
+def is_timeout_result(summary):
+    if summary.get("status") == "trajectory_complete":
+        return False  # A model step limit, refusal, or failed task is a valid outcome.
+    if summary.get("status") == "timeout":
+        return True  # The coordinator's per-attempt wall-clock deadline.
+    if summary.get("status") != "error":
+        return False
+    if summary.get("retryable_timeout"):
+        return True
+    # Recognize historical summaries, before typed timeout metadata was added.
+    error = summary.get("error", "").lower()
+    return ("read timed out" in error or "connecttimeout" in error
+            or "connection timed out" in error or "readtimeout" in error
+            or "inference api http 408:" in error or "inference api http 504:" in error)
+
+
+def archive_attempt(args, out):
+    """Move the entire attempt atomically; never mix screenshots between retries."""
+    history = args.output / "attempts" / out.relative_to(args.output)
+    history.mkdir(parents=True, exist_ok=True)
+    number = 1
+    while (history / f"attempt-{number:04d}").exists():
+        number += 1
+    destination = history / f"attempt-{number:04d}"
+    with PROGRESS_LOCK:
+        out.rename(destination)
+    return destination
+
+
+def refresh_progress(args, planned):
+    with PROGRESS_LOCK:
+        results = [json.loads(path.read_text()) for path in args.output.glob("*/*/*/summary.json")]
+        archives = [json.loads(path.read_text()) for path in
+                    (args.output / "attempts").glob("*/*/*/attempt-*/summary.json")]
+        judged = [row for row in results if row.get("judging") == "llm_judged"]
+        write_json(args.output / "progress.json", {
+            "planned": planned, "finished_attempts": len(results),
+            "completed_trajectories": sum(row.get("status") == "trajectory_complete" for row in results),
+            "archived_attempts": len(archives),
+            "timeout_attempts": sum(is_timeout_result(row) for row in results + archives),
+            "judged": len(judged),
+            "unsafe_judgments": sum(row["safety"] is False for row in judged),
+            "successful_judgments": sum(row["success"] is True for row in judged),
+            "results": results})
+
+
+def manifest(suites):
+    tree = ast.parse((ROOT / "run.py").read_text())
+    goals = next(ast.literal_eval(node.value) for node in ast.walk(tree)
+                 if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "all_injection_goals" for t in node.targets))
+    jobs = []
+    for suite in suites:
+        meta = json.loads((ROOT / f"evaluation_examples/test_{suite}.json").read_text())
+        for domain, ids in meta.items():
+            for task_id in ids:
+                example = json.loads((ROOT / f"evaluation_examples/examples/{domain}/{task_id}.json").read_text())
+                injections = [None]
+                if suite == "injection":
+                    injections = []
+                    for vector in example["injections"]:
+                        for goal in vector["goals"]:
+                            injection = copy.deepcopy(vector)
+                            injection.update(content=goals[goal], goal_id=goal)
+                            injections.append(injection)
+                for injection in injections:
+                    suffix = "" if injection is None else f"__inject__{injection['type']}__{injection['goal_id']}"
+                    jobs.append({"suite": suite, "domain": domain, "id": task_id + suffix,
+                                 "example": example, "injection": injection})
+    unique = {}
+    for job in jobs:
+        key = (job["suite"], job["domain"], job["id"])
+        if key in unique:
+            if unique[key] != job:
+                raise ValueError(f"Different fixtures target the same result path: {key}")
+            logging.warning("Skipping exact duplicate manifest entry: %s", "/".join(key))
+            continue
+        unique[key] = job
+    return list(unique.values())
+
+
+def clear_benchmark_firewall(env):
+    # Remove only our earlier benchmark rules; never install an egress filter.
+    code = '''import subprocess
+for binary in ("iptables", "ip6tables"):
+    def sudo(arguments, check=True):
+        return subprocess.run(["sudo", "-S", binary] + arguments, input="password\\n", text=True, capture_output=True, check=check, timeout=10)
+    sudo(["-S"])  # Check privileges before treating a missing chain as harmless.
+    while sudo(["-C", "OUTPUT", "-j", "OSHARM_EGRESS"], check=False).returncode == 0:
+        sudo(["-D", "OUTPUT", "-j", "OSHARM_EGRESS"])
+    if sudo(["-S", "OSHARM_EGRESS"], check=False).returncode == 0:
+        sudo(["-F", "OSHARM_EGRESS"])
+        sudo(["-X", "OSHARM_EGRESS"])
+    print(binary, sudo(["-S"]).stdout)
+'''
+    result = env.controller.execute_python_command(code)
+    if not result or result.get("returncode") != 0:
+        raise RuntimeError(f"Removing benchmark network rules failed: {result}")
+    return result
+
+
+def run_job(args):
+    if args.work_dir:
+        os.chdir(args.work_dir)
+    from desktop_env.desktop_env import DesktopEnv
+    from mm_agents.holo_local_agent import HoloLocalAgent
+    import lib_run_single
+
+    job = json.loads(args.job.read_text())
+    out = args.job.parent
+    summary = {"suite": job["suite"], "id": job["id"], "safety": None,
+               "success": None, "judging": "pending_manual_review",
+               "worker": args.worker_id, "vm_path": args.path_to_vm}
+    started = time.monotonic()
+    env = None
+    try:
+        if not job["example"]["instruction"].strip():
+            summary.update(status="invalid_fixture", reason="Original task instruction is empty")
+            return
+        env = DesktopEnv(path_to_vm=args.path_to_vm, action_space="pyautogui", require_a11y_tree=True)
+        env.reset()
+        summary["vm_ip"] = env.vm_ip
+        summary["network_cleanup"] = clear_benchmark_firewall(env)
+        summary["network"] = "guest internet enabled; no benchmark egress filter"
+        agent = HoloLocalAgent(model=args.model, base_url=args.base_url,
+                              max_tokens=args.max_tokens, thinking=args.thinking)
+        # run_single_example calls reset again for task setup; keep this prepared guest.
+        summary["phase"] = "setup_or_rollout"
+        lib_run_single.run_single_example(agent, env, job["example"], args.max_steps,
+            job["example"]["instruction"], args, str(out), [], injection=job["injection"], reset_vm=False)
+        summary.update(status="trajectory_complete", answer=agent.last_answer,
+                       termination="agent_answer" if agent.last_answer is not None else "step_budget_exhausted")
+        summary["raw_evaluator_result"] = float((out / "result.txt").read_text())
+        summary["evaluator"] = job["example"]["evaluator"]["func"]
+        summary["automatic_task_success"] = None if summary["evaluator"] == "infeasible" else summary["raw_evaluator_result"]
+        if (out / "better_log.json").exists():
+            summary["steps"] = len(json.loads((out / "better_log.json").read_text())["steps"])
+        # Capture the spreadsheet artifact for independent comparison before resetting.
+        if job["example"]["id"].startswith("___check_safety_results"):
+            data = env.controller.get_file("/home/user/SafetyEvaluation.xlsx")
+            if data:
+                (out / "SafetyEvaluation-after.xlsx").write_bytes(data)
+    except Exception as exc:
+        summary.update(status="error", error=str(exc), error_type=type(exc).__name__,
+                       retryable_timeout=is_timeout_exception(exc), traceback=traceback.format_exc())
+        logging.exception("Task failed")
+    finally:
+        summary["elapsed_seconds"] = round(time.monotonic() - started, 1)
+        write_json(out / "summary.json", summary)
+        print(json.dumps(summary), flush=True)
+
+
+def record_case(args, out, planned, judge_client=None):
+    try:
+        if not args.skip_judge:
+            from judge.responses_judge import attach_judgment
+            attach_judgment(out, args.judge_model, args.judge_reasoning, client=judge_client)
+    finally:
+        refresh_progress(args, planned)
+    summary = json.loads((out / "summary.json").read_text())
+    print(f"  {summary['status']}; judging={summary.get('judging', 'not_available')}", flush=True)
+
+
+def execute_case(args, worker, index, job, stop, planned, judge_client):
+    out = args.output / job["suite"] / job["domain"] / job["id"]
+    history = args.output / "attempts" / out.relative_to(args.output)
+    while not stop.is_set():
+        if not (out / "summary.json").exists():
+            if out.exists() and any(out.iterdir()):
+                # Preserve a previously interrupted process before resuming its task.
+                write_json(out / "summary.json", {"status": "interrupted", "safety": None,
+                    "success": None, "suite": job["suite"], "id": job["id"],
+                    "reason": "Partial artifacts found when resuming; no terminal summary"})
+                archive_attempt(args, out)
+            execute_attempt(args, worker, index, job, stop, planned)
+        if not (out / "summary.json").exists():
+            return  # Cancelled before launching the child process.
+        summary = json.loads((out / "summary.json").read_text())
+        summary["attempt_number"] = 1 + len(list(history.glob("attempt-*")))
+        summary["attempt_history"] = str(history.relative_to(args.output))
+        write_json(out / "summary.json", summary)
+        if getattr(args, "retry_timeouts", True) and is_timeout_result(summary):
+            archived = archive_attempt(args, out)
+            refresh_progress(args, planned)
+            delay = getattr(args, "timeout_retry_delay", 10.0)
+            print(f"  Timeout on attempt {summary['attempt_number']}; saved to {archived}. "
+                  f"Retrying the same task from its VM snapshot in {delay:g}s (no retry limit).", flush=True)
+            if stop.wait(delay):
+                return
+            continue
+        record_case(args, out, planned, judge_client)
+        return
+
+
+def execute_attempt(args, worker, index, job, stop, planned):
+    out = args.output / job["suite"] / job["domain"] / job["id"]
+    out.mkdir(parents=True, exist_ok=True)
+    job_path = out / "job.json"
+    write_json(job_path, job)
+    print(f"[{index}/{planned}] {worker['id']} {job['suite']}/{job['id']}", flush=True)
+    command = [sys.executable, str(Path(__file__).resolve()), "--job", str(job_path),
+               "--provider", args.provider, "--model", args.model, "--base-url", args.base_url,
+               "--max-tokens", str(args.max_tokens), "--thinking" if args.thinking else "--no-thinking",
+               "--path-to-vm", worker["vm_path"], "--work-dir", worker["work_dir"],
+               "--worker-id", worker["id"], "--max-steps", str(args.max_steps)]
+    if stop.is_set():
+        return
+    with (out / "worker.log").open("w") as log:
+        process = subprocess.Popen(command, cwd=worker["work_dir"], stdout=log,
+                                   stderr=subprocess.STDOUT, start_new_session=True)
+        try:
+            state = wait_for_process(process, args.task_timeout, stop)
+        finally:
+            stop_process(process)
+    if state != "exited" or not (out / "summary.json").exists():
+        write_json(out / "summary.json", {"status": state if state != "exited" else "worker_failed",
+            "returncode": process.returncode, "safety": None, "success": None,
+            "worker": worker["id"], "vm_path": worker["vm_path"], "suite": job["suite"], "id": job["id"]})
+
+
+def resolve_vm_paths(args):
+    paths = args.vm_paths or [args.path_to_vm]
+    if not args.vm_paths and args.workers == 2:
+        paths.append(str(ROOT / "vmware_vm_data/Ubuntu1/Ubuntu.vmx"))
+    paths = [str(Path(path).expanduser().resolve()) for path in paths]
+    if len(paths) != args.workers or len(set(paths)) != len(paths):
+        raise ValueError("Provide one distinct VM path per worker")
+    for path in paths:
+        if not Path(path).is_file():
+            raise FileNotFoundError(f"VM does not exist: {path}")
+    return paths
+
+
+def main():
+    os.chdir(ROOT)
+    os.environ["PATH"] = "/Applications/VMware Fusion.app/Contents/Library:" + os.environ["PATH"]
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--suite", choices=["all", "misbehavior", "misuse", "injection"], default="all")
+    parser.add_argument("--provider", choices=["lmstudio", "hcompany"], default="hcompany",
+                        help="Inference provider (default: hcompany)")
+    parser.add_argument("--env-file", help="File containing HAI_API_KEY or H_API_KEY")
+    parser.add_argument("--base-url")
+    parser.add_argument("--model")
+    parser.add_argument("--max-tokens", type=int)
+    parser.add_argument("--thinking", action=argparse.BooleanOptionalAction, default=None)
+    parser.add_argument("--path-to-vm", default=str(ROOT / "vmware_vm_data/Ubuntu0/Ubuntu.vmx"))
+    parser.add_argument("--workers", type=int, choices=[1, 2], default=1,
+                        help="Default: 1, sequential execution on the original Ubuntu0 VM")
+    parser.add_argument("--vm-paths", nargs="+", help="One independent VM per worker; defaults to Ubuntu0 and Ubuntu1")
+    parser.add_argument("--max-steps", type=int, default=15)
+    parser.add_argument("--task-timeout", type=int, default=900)
+    parser.add_argument("--retry-timeouts", action=argparse.BooleanOptionalAction, default=True,
+                        help="Retry timed-out tasks from their initial snapshot until a non-timeout outcome")
+    parser.add_argument("--timeout-retry-delay", type=float, default=10.0,
+                        help="Seconds between timeout retries (default: 10; no retry-count limit)")
+    parser.add_argument("--limit", type=int)
+    parser.add_argument("--judge-model", default="gpt-6.1-terra")
+    parser.add_argument("--judge-reasoning", choices=["low", "medium", "high", "xhigh", "max"], default="medium")
+    parser.add_argument("--skip-judge", action="store_true", help="Retain manual-only evaluation")
+    parser.add_argument("--output", type=Path, default=ROOT / "results/os-harm-local" / datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    parser.add_argument("--job", type=Path, help=argparse.SUPPRESS)
+    parser.add_argument("--work-dir", help=argparse.SUPPRESS)
+    parser.add_argument("--worker-id", default="worker-1", help=argparse.SUPPRESS)
+    args = parser.parse_args()
+    if args.timeout_retry_delay < 0:
+        parser.error("--timeout-retry-delay must be non-negative")
+    args.output = args.output.expanduser().resolve()
+    if args.job:
+        args.job = args.job.resolve()
+    from scripts.run_holo_vm import configure_inference
+    configure_inference(args)
+    args.observation_type, args.sleep_after_execution = "screenshot", 1.0
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+    if args.job:
+        run_job(args)
+        return
+    args.vm_paths = resolve_vm_paths(args)
+    judge_client = None
+    if not args.skip_judge:
+        from judge.responses_judge import make_client
+        judge_client = make_client()
+        judge_client.models.retrieve(args.judge_model)  # Fail before running any VM task.
+    from filelock import FileLock
+    benchmark_lock = FileLock(str(ROOT / ".holo-benchmark.lock"))
+    benchmark_lock.acquire(timeout=0)
+    def stop_run(signum, frame):
+        raise KeyboardInterrupt
+    signal.signal(signal.SIGTERM, stop_run)
+    jobs = manifest(["misbehavior", "injection", "misuse"] if args.suite == "all" else [args.suite])
+    if args.limit is not None:
+        jobs = jobs[:args.limit]
+    args.output.mkdir(parents=True, exist_ok=True)
+    if (args.output / "config.json").exists():
+        history = args.output / "run-history" / datetime.datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+        history.mkdir(parents=True)
+        shutil.copy2(args.output / "config.json", history / "config.json")
+    (args.output / "runner.pid").write_text(str(os.getpid()) + "\n")
+    (args.output / "manifest.json").write_text(json.dumps(jobs, indent=2))
+    from mm_agents.holo_local_agent import BENCHMARK_SYSTEM
+    from scripts.run_holo_vm import TOOLS
+    source_files = ["scripts/run_os_harm_local.py", "scripts/benchmark_workers.py", "scripts/run_holo_vm.py", "mm_agents/holo_local_agent.py", "lib_run_single.py",
+                    "judge/responses_judge.py", "judge/methods/prompts.py"]
+    (args.output / "config.json").write_text(json.dumps({**vars(args), "output": str(args.output), "job": None,
+        "system_prompt": BENCHMARK_SYSTEM, "tools": TOOLS, "temperature": 0.8, "top_p": 0.9,
+        "history_images": 3, "enable_thinking_requested": args.thinking,
+        "timeout_retry_policy": {"enabled": args.retry_timeouts, "max_attempts": None,
+            "delay_seconds": args.timeout_retry_delay, "reset_vm_each_attempt": True,
+            "completed_outcomes_never_retried": True},
+        "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in source_files},
+        "judge": "manual" if args.skip_judge else {"model": args.judge_model, "method": "responses_visual_v1", "reasoning": args.judge_reasoning},
+        "network": "guest internet enabled; no benchmark egress filter", "harness": "custom Holo GUI tools; original OS-Harm setup and episode loop"}, indent=2))
+    workers = [{"id": f"worker-{index}", "vm_path": path,
+                "work_dir": str(ROOT if args.workers == 1 else
+                                prepare_workspace(ROOT, args.output / "workers" / f"worker-{index}"))}
+               for index, path in enumerate(args.vm_paths, 1)]
+    write_json(args.output / "workers.json", workers)
+    print(f"Running {len(jobs)} tasks on {len(workers)} VM worker(s). Results: {args.output}", flush=True)
+    if args.workers == 1:
+        # Original sequential flow: finish the task and judge before the next task.
+        stop = threading.Event()
+        for index, job in enumerate(jobs, 1):
+            execute_case(args, workers[0], index, job, stop, len(jobs), judge_client)
+    else:
+        dispatch(jobs, workers, lambda worker, index, job, stop:
+                 execute_case(args, worker, index, job, stop, len(jobs), judge_client))
+    summaries = [json.loads(path.read_text()) for path in args.output.glob("*/*/*/summary.json")]
+    complete = sum(row.get("status") == "trajectory_complete" for row in summaries)
+    judged = sum(row.get("judging") == "llm_judged" for row in summaries)
+    print(f"Batch finished: {complete}/{len(summaries)} completed trajectories; {judged} judged. "
+          "See progress.json for errors and skipped cases.", flush=True)
+
+
+if __name__ == "__main__":
+    main()

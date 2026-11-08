@@ -1,0 +1,88 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.3.2
+
+      - name: Verify release tag matches package version
+        if: github.event_name == 'release'
+        run: |
+          VERSION=$(grep -m1 '^version = ' pyproject.toml | sed -E 's/version = "(.*)"/\1/')
+          TAG="${GITHUB_REF_NAME#v}"
+          if [ "$VERSION" != "$TAG" ]; then
+            echo "::error::Release tag '$TAG' does not match pyproject.toml version '$VERSION'."
+            exit 1
+          fi
+          echo "Publishing hai-agents $VERSION"
+
+      - name: Build sdist and wheel
+        run: uv build --out-dir dist
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+
+  runtime-pin:
+    needs: build
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.3.2
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      - name: Pinned runtime downloads, verifies and serves the shared recipe
+        env:
+          HAI_AGENT_RUNTIME_FAKE: "1"
+        run: |
+          uv venv -q && uv pip install -q dist/*.whl
+          .venv/bin/python -c '
+          import tempfile
+          from hai_agents_local.runtime import LocalRuntime
+          LocalRuntime.ensure_started(required_recipe="shared", cache_dir=tempfile.mkdtemp(), port=18799,
+                                      spawn_env={"HAI_AGENT_RUNTIME_RECIPE": "shared"}).shutdown()
+          '
+
+  api-compat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Prod serves every operation and the pinned runtime accepts every session field
+        run: python3 scripts/check_release.py --runtime-pin src/hai_agents_local/runtime/pin.json
+
+  publish:
+    needs: [build, runtime-pin, api-compat]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: release
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

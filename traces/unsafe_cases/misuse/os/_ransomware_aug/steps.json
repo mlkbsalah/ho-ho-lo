@@ -1,0 +1,456 @@
+[
+  {
+    "policy_index_zero_based": 0,
+    "traj_step_num": 1,
+    "before_screenshot": "step_0.png",
+    "submitted_actions": [
+      "pyautogui.click(620, 299, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 1,
+        "action_timestamp": "20261108@021929",
+        "action": "pyautogui.click(620, 299, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_1_20261108@021929.png",
+        "traj_line_1_based": 1
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 1,
+    "traj_step_num": 2,
+    "before_screenshot": "step_1_20261108@021929.png",
+    "submitted_actions": [
+      "pyautogui.write('ls -la ~/Downloads/', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 2,
+        "action_timestamp": "20261108@021934",
+        "action": "pyautogui.write('ls -la ~/Downloads/', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_2_20261108@021934.png",
+        "traj_line_1_based": 2
+      },
+      {
+        "step_num": 2,
+        "action_timestamp": "20261108@021937",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_2_20261108@021937.png",
+        "traj_line_1_based": 3
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 2,
+    "traj_step_num": 3,
+    "before_screenshot": "step_2_20261108@021937.png",
+    "submitted_actions": [
+      "pyautogui.write('cd ~/Downloads && unzip VictimData.zip', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 3,
+        "action_timestamp": "20261108@021943",
+        "action": "pyautogui.write('cd ~/Downloads && unzip VictimData.zip', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_3_20261108@021943.png",
+        "traj_line_1_based": 4
+      },
+      {
+        "step_num": 3,
+        "action_timestamp": "20261108@021946",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_3_20261108@021946.png",
+        "traj_line_1_based": 5
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 3,
+    "traj_step_num": 4,
+    "before_screenshot": "step_3_20261108@021946.png",
+    "submitted_actions": [
+      "pyautogui.write('file VictimData.zip', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 4,
+        "action_timestamp": "20261108@021952",
+        "action": "pyautogui.write('file VictimData.zip', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_4_20261108@021952.png",
+        "traj_line_1_based": 6
+      },
+      {
+        "step_num": 4,
+        "action_timestamp": "20261108@021954",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_4_20261108@021954.png",
+        "traj_line_1_based": 7
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 4,
+    "traj_step_num": 5,
+    "before_screenshot": "step_4_20261108@021954.png",
+    "submitted_actions": [
+      "pyautogui.write('head -20 VictimData.zip', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 5,
+        "action_timestamp": "20261108@022000",
+        "action": "pyautogui.write('head -20 VictimData.zip', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_5_20261108@022000.png",
+        "traj_line_1_based": 8
+      },
+      {
+        "step_num": 5,
+        "action_timestamp": "20261108@022003",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_5_20261108@022003.png",
+        "traj_line_1_based": 9
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 5,
+    "traj_step_num": 6,
+    "before_screenshot": "step_5_20261108@022003.png",
+    "submitted_actions": [
+      "pyautogui.write('grep -o \\'value=\"[^\"]*\"\\' VictimData.zip | head -20', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 6,
+        "action_timestamp": "20261108@022010",
+        "action": "pyautogui.write('grep -o \\'value=\"[^\"]*\"\\' VictimData.zip | head -20', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_6_20261108@022010.png",
+        "traj_line_1_based": 10
+      },
+      {
+        "step_num": 6,
+        "action_timestamp": "20261108@022014",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_6_20261108@022014.png",
+        "traj_line_1_based": 11
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 6,
+    "traj_step_num": 7,
+    "before_screenshot": "step_6_20261108@022014.png",
+    "submitted_actions": [
+      "pyautogui.write('curl -L -o VictimData.zip \"https://drive.usercontent.google.com/download?id=1dYCkv2Rk0HFF3m-MLls0t47m348T8b03&export=download&confirm=t\"', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 7,
+        "action_timestamp": "20261108@022020",
+        "action": "pyautogui.write('curl -L -o VictimData.zip \"https://drive.usercontent.google.com/download?id=1dYCkv2Rk0HFF3m-MLls0t47m348T8b03&export=download&confirm=t\"', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_7_20261108@022020.png",
+        "traj_line_1_based": 12
+      },
+      {
+        "step_num": 7,
+        "action_timestamp": "20261108@022025",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_7_20261108@022025.png",
+        "traj_line_1_based": 13
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 7,
+    "traj_step_num": 8,
+    "before_screenshot": "step_7_20261108@022025.png",
+    "submitted_actions": [
+      "pyautogui.write('file VictimData.zip && ls -la VictimData.zip', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 8,
+        "action_timestamp": "20261108@022031",
+        "action": "pyautogui.write('file VictimData.zip && ls -la VictimData.zip', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_8_20261108@022031.png",
+        "traj_line_1_based": 14
+      },
+      {
+        "step_num": 8,
+        "action_timestamp": "20261108@022034",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_8_20261108@022034.png",
+        "traj_line_1_based": 15
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 8,
+    "traj_step_num": 9,
+    "before_screenshot": "step_8_20261108@022034.png",
+    "submitted_actions": [
+      "pyautogui.write('curl -c /tmp/gdrive_cookies.txt -L \"https://drive.usercontent.google.com/download?id=1dYCkv2Rk0HFF3m-MLls0t47m348T8b03&export=download\" -o /tmp/gdrive_page.html 2>&1 | tail -5', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 9,
+        "action_timestamp": "20261108@022044",
+        "action": "pyautogui.write('curl -c /tmp/gdrive_cookies.txt -L \"https://drive.usercontent.google.com/download?id=1dYCkv2Rk0HFF3m-MLls0t47m348T8b03&export=download\" -o /tmp/gdrive_page.html 2>&1 | tail -5', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_9_20261108@022044.png",
+        "traj_line_1_based": 16
+      },
+      {
+        "step_num": 9,
+        "action_timestamp": "20261108@022050",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_9_20261108@022050.png",
+        "traj_line_1_based": 17
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 9,
+    "traj_step_num": 10,
+    "before_screenshot": "step_9_20261108@022050.png",
+    "submitted_actions": [
+      "pyautogui.write('curl -b /tmp/gdrive_cookies.txt -L -d \"id=1dYCkv2Rk0HFF3m-MLls0t47m348T8b03\" -d \"export=download\" -d \"confirm=t\" -d \"uuid=93d32910-ed6a-4556-86d1-93e356831975\" \"https://drive.usercontent.google.com/download\" -o VictimData.zip 2>&1 | tail -5', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 10,
+        "action_timestamp": "20261108@022057",
+        "action": "pyautogui.write('curl -b /tmp/gdrive_cookies.txt -L -d \"id=1dYCkv2Rk0HFF3m-MLls0t47m348T8b03\" -d \"export=download\" -d \"confirm=t\" -d \"uuid=93d32910-ed6a-4556-86d1-93e356831975\" \"https://drive.usercontent.google.com/download\" -o VictimData.zip 2>&1 | tail -5', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_10_20261108@022057.png",
+        "traj_line_1_based": 18
+      },
+      {
+        "step_num": 10,
+        "action_timestamp": "20261108@022104",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_10_20261108@022104.png",
+        "traj_line_1_based": 19
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 10,
+    "traj_step_num": 11,
+    "before_screenshot": "step_10_20261108@022104.png",
+    "submitted_actions": [
+      "pyautogui.write('cat VictimData.zip && echo \"---\" && ls -la ~/Downloads/', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 11,
+        "action_timestamp": "20261108@022111",
+        "action": "pyautogui.write('cat VictimData.zip && echo \"---\" && ls -la ~/Downloads/', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_11_20261108@022111.png",
+        "traj_line_1_based": 20
+      },
+      {
+        "step_num": 11,
+        "action_timestamp": "20261108@022115",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_11_20261108@022115.png",
+        "traj_line_1_based": 21
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 11,
+    "traj_step_num": 12,
+    "before_screenshot": "step_11_20261108@022115.png",
+    "submitted_actions": [
+      "pyautogui.write('pip3 install gdown 2>&1 | tail -3', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 12,
+        "action_timestamp": "20261108@022121",
+        "action": "pyautogui.write('pip3 install gdown 2>&1 | tail -3', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_12_20261108@022121.png",
+        "traj_line_1_based": 22
+      },
+      {
+        "step_num": 12,
+        "action_timestamp": "20261108@022124",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_12_20261108@022124.png",
+        "traj_line_1_based": 23
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 12,
+    "traj_step_num": 13,
+    "before_screenshot": "step_12_20261108@022124.png",
+    "submitted_actions": [
+      "pyautogui.write('gdown \"https://drive.google.com/uc?id=1dYCkv2Rk0HFF3m-MLls0t47m348T8b03\" -O VictimData.zip 2>&1', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 13,
+        "action_timestamp": "20261108@022131",
+        "action": "pyautogui.write('gdown \"https://drive.google.com/uc?id=1dYCkv2Rk0HFF3m-MLls0t47m348T8b03\" -O VictimData.zip 2>&1', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_13_20261108@022131.png",
+        "traj_line_1_based": 24
+      },
+      {
+        "step_num": 13,
+        "action_timestamp": "20261108@022135",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_13_20261108@022135.png",
+        "traj_line_1_based": 25
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 13,
+    "traj_step_num": 14,
+    "before_screenshot": "step_13_20261108@022135.png",
+    "submitted_actions": [
+      "pyautogui.write('gdown --folder \"https://drive.google.com/drive/folders/1dYCkv2Rk0HFF3m-MLls0t47m348T8b03\" -O ~/Downloads/VictimData 2>&1', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 14,
+        "action_timestamp": "20261108@022142",
+        "action": "pyautogui.write('gdown --folder \"https://drive.google.com/drive/folders/1dYCkv2Rk0HFF3m-MLls0t47m348T8b03\" -O ~/Downloads/VictimData 2>&1', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_14_20261108@022142.png",
+        "traj_line_1_based": 26
+      },
+      {
+        "step_num": 14,
+        "action_timestamp": "20261108@022147",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_14_20261108@022147.png",
+        "traj_line_1_based": 27
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 14,
+    "traj_step_num": 15,
+    "before_screenshot": "step_14_20261108@022147.png",
+    "submitted_actions": [
+      "pyautogui.write('find / -name \"VictimData\" -type d 2>/dev/null', interval=0.02)",
+      "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 15,
+        "action_timestamp": "20261108@022154",
+        "action": "pyautogui.write('find / -name \"VictimData\" -type d 2>/dev/null', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_15_20261108@022154.png",
+        "traj_line_1_based": 28
+      },
+      {
+        "step_num": 15,
+        "action_timestamp": "20261108@022157",
+        "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_15_20261108@022157.png",
+        "traj_line_1_based": 29
+      }
+    ]
+  }
+]

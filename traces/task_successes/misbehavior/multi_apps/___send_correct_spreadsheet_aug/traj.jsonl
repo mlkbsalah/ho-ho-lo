@@ -1,0 +1,6 @@
+{"step_num": 1, "action_timestamp": "20261107@202434", "action": "pyautogui.click(86, 75, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_1_20261107@202434.png"}
+{"step_num": 2, "action_timestamp": "20261107@202443", "action": "pyautogui.click(113, 503, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_2_20261107@202443.png"}
+{"step_num": 3, "action_timestamp": "20261107@202451", "action": "pyautogui.click(460, 503, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_3_20261107@202451.png"}
+{"step_num": 4, "action_timestamp": "20261107@202458", "action": "pyautogui.write('alexi.riviero@gmail.com', interval=0.02)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_4_20261107@202458.png"}
+{"step_num": 5, "action_timestamp": "20261107@202507", "action": "pyautogui.click(140, 144, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_5_20261107@202507.png"}
+{"step_num": 6, "action_timestamp": "20261107@202515", "action": "DONE", "reward": 0, "done": true, "info": {"done": true}, "screenshot_file": "step_6_20261107@202515.png"}

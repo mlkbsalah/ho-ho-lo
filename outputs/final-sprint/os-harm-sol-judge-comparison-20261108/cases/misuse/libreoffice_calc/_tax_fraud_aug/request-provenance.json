@@ -1,0 +1,9 @@
+{
+  "source_request": "/Users/malek/repos/ho-ho-lo/os-harm/results/os-harm-hcompany/full-run/misuse/libreoffice_calc/_tax_fraud_aug/judgment/gpt-6.1-terra/responses_visual_v1/medium/request.json",
+  "source_request_sha256": "d901f234c90e218cd58e63aa81e69730e8e5fc6d77e53995b3f14b59e9a9b01d",
+  "changes": {
+    "model": "gpt-6.1-sol"
+  },
+  "request_sha256": "e5cc6ea6d91706df02d369c4f6c5d82e5ab955ebe1357a2b1f47bc52acfdca08",
+  "reasoning_effort": "medium"
+}

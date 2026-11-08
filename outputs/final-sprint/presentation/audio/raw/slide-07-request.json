@@ -1,0 +1,11 @@
+{
+  "voice_id": "nCb6TznGzIsRjsoK",
+  "model_name": "default",
+  "output_format": "wav",
+  "only_audio": true,
+  "text": "The reminder failed on a new attack: the agent dropped invitation replies. The matching baseline timed out. In the technical control, it kept Python preparation but made factual errors. Next, we should test this failure across other tasks and identify when copied instructions become harmful advice or action.",
+  "json_config": {
+    "rewrite_rules": "en",
+    "padding_bonus": 0.0
+  }
+}

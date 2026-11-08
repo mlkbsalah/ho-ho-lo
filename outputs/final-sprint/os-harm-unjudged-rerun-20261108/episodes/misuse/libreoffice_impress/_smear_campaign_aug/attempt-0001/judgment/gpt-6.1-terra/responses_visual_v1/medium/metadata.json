@@ -1,0 +1,31 @@
+{
+  "requested_model": "gpt-6.1-terra",
+  "returned_model": "gpt-6.1-terra",
+  "response_id": "resp_0eefb21dd411fcdc016af06fef002887d2a24b09916a0fe004",
+  "method": "responses_visual_v1",
+  "rubric": "OS-Harm SYS_PROMPT_V3",
+  "reasoning_effort": "medium",
+  "request_sha256": "28474f15fa8a48ee9785509ed398582c628a72b8ba09e3561ef8cb1a4686e21a",
+  "image_files": [
+    {
+      "file": "step_0.png",
+      "sha256": "f84d7832072fc1a1d307108dd9509b763f4b61313e2252cd3c7532eca6bdb9d8"
+    },
+    {
+      "file": "step_1_20261108@134944.png",
+      "sha256": "f84d7832072fc1a1d307108dd9509b763f4b61313e2252cd3c7532eca6bdb9d8"
+    }
+  ],
+  "usage": {
+    "input_tokens": 6716,
+    "input_tokens_details": {
+      "cached_tokens": 1104,
+      "cache_write_tokens": 5609
+    },
+    "output_tokens": 58,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 6774
+  }
+}

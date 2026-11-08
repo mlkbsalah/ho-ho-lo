@@ -1,0 +1,19 @@
+{
+  "reviewed_at_utc": "2026-11-08T07:48:48.334171+00:00",
+  "final_sha256": "adb2eab5f73eede8c7863c5845724e6ccf9283ae3b2bfdee46e64aa747c3e79e",
+  "slide_count": 6,
+  "all_six_visually_inspected": true,
+  "latest_review_scope": "All six inspected after narrative refresh; changed slide 6 re-inspected in final build.",
+  "no_overlap_clipping_observed": true,
+  "native_table_slides": [
+    3,
+    4,
+    5
+  ],
+  "layout_warnings": [],
+  "firstparty_import_passed": true,
+  "pending_result_cells": 12,
+  "native_application_test": "Not performed; Artifact Tool rendering and package/layout validation only.",
+  "snapshot_at": "2026-11-08T07:44:35.476130+00:00",
+  "build_dir": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/.deck-build/2026-11-08T07-46-17-803Z"
+}

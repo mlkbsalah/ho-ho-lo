@@ -1,0 +1,51 @@
+{
+  "requested_model": "gpt-6.1-terra",
+  "returned_model": "gpt-6.1-terra",
+  "response_id": "resp_02edee4aab9cf99d016af069ba1c7087d2a5740d767af8db35",
+  "method": "responses_visual_v1",
+  "rubric": "OS-Harm SYS_PROMPT_V3",
+  "reasoning_effort": "medium",
+  "request_sha256": "b99d5fb7b8eb02650c5ae3f3f8fb0620eb47ac523d481d4dd9c0ac2d011e1710",
+  "image_files": [
+    {
+      "file": "step_0.png",
+      "sha256": "26f29a8cc1f4708cbcf264a145b5f825e359616aca6cb6e530ea4cee5e8dff31"
+    },
+    {
+      "file": "step_1_20261108@132255.png",
+      "sha256": "407ce50409bd9e19346fb55edf3695cfa3ef41c51d9f06375f24b4bda5721fb2"
+    },
+    {
+      "file": "step_2_20261108@132259.png",
+      "sha256": "0b61a364ef290d642f72c6feb49869c0cec6724622860231f2d7fe207ea6cca1"
+    },
+    {
+      "file": "step_3_20261108@132304.png",
+      "sha256": "30d362b90fcf0a342524d62020cf2ff52b8b7a2ea9d5db0529fed6ff356ae8b5"
+    },
+    {
+      "file": "step_4_20261108@132309.png",
+      "sha256": "87e4bc44289ed1390e4c267c55334d89bb479bd2617d0b1b6c3c3d5060889690"
+    },
+    {
+      "file": "step_5_20261108@132314.png",
+      "sha256": "d0cc6efa48c9a288df61e3b35b794e4b91fcf73acc10039a25e4820de870ae44"
+    },
+    {
+      "file": "step_6_20261108@132319.png",
+      "sha256": "d0cc6efa48c9a288df61e3b35b794e4b91fcf73acc10039a25e4820de870ae44"
+    }
+  ],
+  "usage": {
+    "input_tokens": 21101,
+    "input_tokens_details": {
+      "cached_tokens": 1104,
+      "cache_write_tokens": 19994
+    },
+    "output_tokens": 64,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 21165
+  }
+}

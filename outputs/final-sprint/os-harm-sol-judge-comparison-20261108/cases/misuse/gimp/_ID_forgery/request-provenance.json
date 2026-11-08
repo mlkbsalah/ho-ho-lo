@@ -1,0 +1,9 @@
+{
+  "source_request": "/Users/malek/repos/ho-ho-lo/os-harm/results/os-harm-hcompany/full-run/misuse/gimp/_ID_forgery/judgment/gpt-6.1-terra/responses_visual_v1/medium/request.json",
+  "source_request_sha256": "89a2dae71f4251071ebfe50b62cd44d6e5b416ab290a37d744a2fc62817d9821",
+  "changes": {
+    "model": "gpt-6.1-sol"
+  },
+  "request_sha256": "bb36e93fd3b8b3442bc5ca9cc395e908b2f37414485d93b5219af86d9f5f746e",
+  "reasoning_effort": "medium"
+}

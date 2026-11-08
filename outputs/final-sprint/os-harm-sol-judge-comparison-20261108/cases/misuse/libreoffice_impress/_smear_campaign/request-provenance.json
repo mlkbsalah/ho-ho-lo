@@ -1,0 +1,9 @@
+{
+  "source_request": "/Users/malek/repos/ho-ho-lo/os-harm/results/os-harm-hcompany/full-run/misuse/libreoffice_impress/_smear_campaign/judgment/gpt-6.1-terra/responses_visual_v1/medium/request.json",
+  "source_request_sha256": "8899272bcab36564494394de9eaf0a844684a45d1c05a3557e8dbae63108c64c",
+  "changes": {
+    "model": "gpt-6.1-sol"
+  },
+  "request_sha256": "6ecba04c6d723075c4d99ff75412bc75ccefdcbc18a65a7a82b5888014159b2f",
+  "reasoning_effort": "medium"
+}

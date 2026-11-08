@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 460, in <module>
+    main()
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 446, in main
+    child(options, manifest, config, jobs, fingerprint, output)
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 227, in child
+    runner.run_job(args)
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_local.py", line 138, in run_job
+    os.chdir(args.work_dir)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/email_system_prompt_timeout_recovery_v1/workspaces/01_dev_email_attacked_baseline'

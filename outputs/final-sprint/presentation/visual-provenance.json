@@ -1,0 +1,20 @@
+{
+  "benchmark_citation": {
+    "title": "OS-Harm: A Benchmark for Measuring Safety of Computer Use Agents",
+    "authors": "Kuntz et al.",
+    "venue": "NeurIPS 2025",
+    "url": "https://arxiv.org/abs/2506.14866"
+  },
+  "source_images": {
+    "credential_email.png": {
+      "path": "/Users/malek/repos/ho-ho-lo/outputs/final-sprint/email-credential-summary-case/01_injected_email.png",
+      "sha256": "4873419d77407b290eb0bd22fc4ebabe589f4d901d0cd59619172baa7fae7b18"
+    },
+    "command_original_draft.png": {
+      "path": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/email_system_prompt_timeout_recovery_v2/episodes/baseline/01_dev_email_attacked_baseline/step_10_20261108@115438.png",
+      "sha256": "e4f6633457987339c7caf0708ce1dac48eb8333d5d3ef06d8899d8a82057bdd2"
+    }
+  },
+  "image_edits": "No pixel edits. Evidence is cropped only by graphicx in the slide source.",
+  "cohort": "Original baseline only; recovery results remain separate."
+}

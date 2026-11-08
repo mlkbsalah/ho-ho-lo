@@ -1,0 +1,87 @@
+{
+  "requested_model": "gpt-6.1-terra",
+  "returned_model": "gpt-6.1-terra",
+  "response_id": "resp_0624edf2a3d8e018016aef6d92b22c87d2a3b3cdf1153d7c58",
+  "method": "responses_visual_v1",
+  "rubric": "OS-Harm SYS_PROMPT_V3",
+  "reasoning_effort": "medium",
+  "request_sha256": "1a2973aa14da9f50691d28f6cc9ccd2e1ff14034bef2f2a3854f848fb10002c8",
+  "image_files": [
+    {
+      "file": "step_0.png",
+      "sha256": "fb7a119497891e3ed1fd7a55c95352f8002d689668532396a0c9c17bf10a5faf"
+    },
+    {
+      "file": "step_1_20261107@192602.png",
+      "sha256": "44d63736b861a4b05186e946faf4316eea77508eb28b642316ee6255afa39934"
+    },
+    {
+      "file": "step_2_20261107@192609.png",
+      "sha256": "a17930e3b9c173481038195c9c2432f984d0ba16e9300a3c473c1a1505af7c33"
+    },
+    {
+      "file": "step_3_20261107@192617.png",
+      "sha256": "72b578ea0d1cdcdf9eb0fb2268c73c9a58c0fcc1848445ca6be6f6724be7855f"
+    },
+    {
+      "file": "step_4_20261107@192622.png",
+      "sha256": "04d2f97bbf58dc569e834f1d1e61ace3601314c93801c1255484eb3796dd53e5"
+    },
+    {
+      "file": "step_5_20261107@192629.png",
+      "sha256": "27816032dbb2d498d27316aa32b168a266d8bff783ab87bb895f9fb2f04e7ead"
+    },
+    {
+      "file": "step_6_20261107@192634.png",
+      "sha256": "12ab5352867ad634ff86478584b025c885ab186c3adfa35d0edd65eb6034fcd8"
+    },
+    {
+      "file": "step_7_20261107@192640.png",
+      "sha256": "b33b963664313e2946fef4e80dcb42400b60ac572f1e35f3492903efd0f16d34"
+    },
+    {
+      "file": "step_8_20261107@192646.png",
+      "sha256": "12ab5352867ad634ff86478584b025c885ab186c3adfa35d0edd65eb6034fcd8"
+    },
+    {
+      "file": "step_9_20261107@192652.png",
+      "sha256": "b33b963664313e2946fef4e80dcb42400b60ac572f1e35f3492903efd0f16d34"
+    },
+    {
+      "file": "step_10_20261107@192657.png",
+      "sha256": "b33b963664313e2946fef4e80dcb42400b60ac572f1e35f3492903efd0f16d34"
+    },
+    {
+      "file": "step_11_20261107@192703.png",
+      "sha256": "3cf7d876b911b492d1b52c4c6152b1f4928801d975a7e9ce0b298a2b2ced23cc"
+    },
+    {
+      "file": "step_12_20261107@192708.png",
+      "sha256": "14570a2cece299c8697ceae7e27c39932916f9ff4556b1b091913bb3cbbd3d09"
+    },
+    {
+      "file": "step_13_20261107@192713.png",
+      "sha256": "e8e27810f784d5881523e2d37344517f70766d58382602d140356d1010718183"
+    },
+    {
+      "file": "step_14_20261107@192718.png",
+      "sha256": "0b0df561e5d470aad46b08c2506977eb2450677e52096aedb89521ab717dae74"
+    },
+    {
+      "file": "step_15_20261107@192724.png",
+      "sha256": "60323fd36e1155f46759fbe46787a19c1c272e3c63b86b483bf7d4221eb1019c"
+    }
+  ],
+  "usage": {
+    "input_tokens": 47083,
+    "input_tokens_details": {
+      "cached_tokens": 1104,
+      "cache_write_tokens": 45976
+    },
+    "output_tokens": 83,
+    "output_tokens_details": {
+      "reasoning_tokens": 27
+    },
+    "total_tokens": 47166
+  }
+}

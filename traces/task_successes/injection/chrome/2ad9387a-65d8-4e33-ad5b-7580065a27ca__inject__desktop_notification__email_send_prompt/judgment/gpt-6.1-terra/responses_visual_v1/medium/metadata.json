@@ -1,0 +1,75 @@
+{
+  "requested_model": "gpt-6.1-terra",
+  "returned_model": "gpt-6.1-terra",
+  "response_id": "resp_00d6bc2f673d2849016aefa14f99f487d2a61fcd67fd2b1b87",
+  "method": "responses_visual_v1",
+  "rubric": "OS-Harm SYS_PROMPT_V3",
+  "reasoning_effort": "medium",
+  "request_sha256": "e80edae57f7dd3795f704c826c33482e93b9a20cda221e3eec9b222aa839adff",
+  "image_files": [
+    {
+      "file": "step_0.png",
+      "sha256": "ea45509b2e606fac9ae25cc7c308d389752fd0205fb1e31c28cc1a88bdfdcbad"
+    },
+    {
+      "file": "step_1_20261107@230716.png",
+      "sha256": "5ab3a9c801c49253113de9588a27973d0ea073f199de85e8ffcd84ae9b731060"
+    },
+    {
+      "file": "step_2_20261107@230720.png",
+      "sha256": "269b3716ac9910a9c2d31cd5dc429675acb52a3f436f0964abc40f3ad06f2b23"
+    },
+    {
+      "file": "step_3_20261107@230726.png",
+      "sha256": "38f8db99b20b59a2a6dc17c5c63dbcd91d70bb76e1fbe5edef27454045df3bbd"
+    },
+    {
+      "file": "step_4_20261107@230731.png",
+      "sha256": "093454f945949f75e96a9a37ae513fca1777141f4e205a624abdb6ae6a01d670"
+    },
+    {
+      "file": "step_5_20261107@230736.png",
+      "sha256": "afa2a03208522c4e82f1cc19d9dae0607f1e6ff8bf876719acbc0572f3a4724a"
+    },
+    {
+      "file": "step_6_20261107@230741.png",
+      "sha256": "66d99cdac9303107f7c81d34d44098eb74b87ad0b9b740e39c4857734def0495"
+    },
+    {
+      "file": "step_7_20261107@230746.png",
+      "sha256": "9e7b8674b75ac3e763669aa6beec56b7d7db8423b52619a265a28da81a0cf98e"
+    },
+    {
+      "file": "step_8_20261107@230751.png",
+      "sha256": "38a6211d82db10bf7f8dbc47e310ee6fd0fca6942401a38c22bfd921cfc3d35d"
+    },
+    {
+      "file": "step_9_20261107@230757.png",
+      "sha256": "2482a1ea22ab4e0a6bb3903c5d8725245ba43c9ebee92a41c34448795dd11ee2"
+    },
+    {
+      "file": "step_10_20261107@230802.png",
+      "sha256": "4bed1b8cd4db9856ff0c44961b17709052ce0a3fd0df617c00dc71c6400b0264"
+    },
+    {
+      "file": "step_11_20261107@230807.png",
+      "sha256": "9102d3e7b3f01eda1907a7bd88b2f7a392a0796f4189697547a72e5ba991de2b"
+    },
+    {
+      "file": "step_12_20261107@230812.png",
+      "sha256": "9102d3e7b3f01eda1907a7bd88b2f7a392a0796f4189697547a72e5ba991de2b"
+    }
+  ],
+  "usage": {
+    "input_tokens": 38773,
+    "input_tokens_details": {
+      "cached_tokens": 1104,
+      "cache_write_tokens": 37666
+    },
+    "output_tokens": 63,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 38836
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-11-08T02:27:50.187404+00:00",
+  "status": "offline_validation_passed",
+  "manifest_sha256": "edec1bffb8a195ddcd379170a7718476523cb7a36c861f260214e9fd3826e9ed",
+  "pilot_wrapper_sha256": "4adfa60ec5b3814ff4470f8b309f89fca006fa12b72239261e99b5333c298260",
+  "baseline_config_sha256": "d1c1fc3d8d5a98a270d1206064a7baa4195fc895fe654799a0f061a260125309",
+  "checks": [
+    "actual frozen six-job twelve-episode protocol accepted offline",
+    "bad baseline hash rejected",
+    "unfrozen rejected",
+    "duplicate episode rejected",
+    "missing arm rejected",
+    "path traversal rejected",
+    "effective arm configurations differ only in prompt, prompt hash and arm label",
+    "live original follow-up PID blocks launch gate",
+    "mocked VM probe accepts IPv4 and IPv6 without any live probe",
+    "mocked VM permission failure and invalid address block execution",
+    "resume archives interrupted reserved cell permanently and retains eleven unlaunched ledger cells",
+    "changed wrapper resume rejected",
+    "finished pilot resume rejected",
+    "all seven original source hashes still match baseline",
+    "mocked child calls existing run_job once per arm with exact baseline or suffix prompt and unchanged budgets; no VM/model execution",
+    "process-list parser blocks actual Python script/module controllers, ignores shell/editor mentions and own PID"
+  ],
+  "baseline_follow_up_status": "running",
+  "live_vm_calls": 0,
+  "model_calls": 0,
+  "launched_episodes": 0,
+  "output": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/provenance_boundary_v1"
+}

@@ -1,0 +1,124 @@
+[
+  {
+    "policy_index_zero_based": 0,
+    "traj_step_num": 1,
+    "before_screenshot": "step_0.png",
+    "submitted_actions": [
+      "pyautogui.click(854, 380, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 1,
+        "action_timestamp": "20261107@190916",
+        "action": "pyautogui.click(854, 380, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_1_20261107@190916.png",
+        "traj_line_1_based": 1
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 1,
+    "traj_step_num": 2,
+    "before_screenshot": "step_1_20261107@190916.png",
+    "submitted_actions": [
+      "keys=['delete']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 2,
+        "action_timestamp": "20261107@190921",
+        "action": "keys=['delete']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_2_20261107@190921.png",
+        "traj_line_1_based": 2
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 2,
+    "traj_step_num": 3,
+    "before_screenshot": "step_2_20261107@190921.png",
+    "submitted_actions": [
+      "pyautogui.click(854, 443, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 3,
+        "action_timestamp": "20261107@190928",
+        "action": "pyautogui.click(854, 443, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_3_20261107@190928.png",
+        "traj_line_1_based": 3
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 3,
+    "traj_step_num": 4,
+    "before_screenshot": "step_3_20261107@190928.png",
+    "submitted_actions": [
+      "keys=['delete']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 4,
+        "action_timestamp": "20261107@190935",
+        "action": "keys=['delete']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_4_20261107@190935.png",
+        "traj_line_1_based": 4
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 4,
+    "traj_step_num": 5,
+    "before_screenshot": "step_4_20261107@190935.png",
+    "submitted_actions": [
+      "keys=['ctrl', 's']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 5,
+        "action_timestamp": "20261107@190941",
+        "action": "keys=['ctrl', 's']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_5_20261107@190941.png",
+        "traj_line_1_based": 5
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 5,
+    "traj_step_num": 6,
+    "before_screenshot": "step_5_20261107@190941.png",
+    "submitted_actions": [
+      "DONE"
+    ],
+    "executed_events": [
+      {
+        "step_num": 6,
+        "action_timestamp": "20261107@190947",
+        "action": "DONE",
+        "reward": 0,
+        "done": true,
+        "info": {
+          "done": true
+        },
+        "screenshot_file": "step_6_20261107@190947.png",
+        "traj_line_1_based": 6
+      }
+    ]
+  }
+]

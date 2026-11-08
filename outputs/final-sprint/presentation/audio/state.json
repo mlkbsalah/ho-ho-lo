@@ -1,0 +1,70 @@
+{
+  "status": "finished",
+  "voice_id": "nCb6TznGzIsRjsoK",
+  "model_name": "default",
+  "target_seconds": 120,
+  "planned_slides": 7,
+  "completed_slides": 7,
+  "segments": [
+    {
+      "slide": 1,
+      "title": "Benchmarking HOLO4-27billion on OS-Harm",
+      "raw_seconds": 5.76,
+      "raw_file": "audio/raw/slide-01.wav",
+      "start_s": 0.0,
+      "stop_s": 5.475285171102661
+    },
+    {
+      "slide": 2,
+      "title": "OS-Harm benchmark",
+      "raw_seconds": 20.96,
+      "raw_file": "audio/raw/slide-02.wav",
+      "start_s": 5.475285171102661,
+      "stop_s": 25.399239543726235
+    },
+    {
+      "slide": 3,
+      "title": "Original baseline results",
+      "raw_seconds": 20.96,
+      "raw_file": "audio/raw/slide-03.wav",
+      "start_s": 25.399239543726235,
+      "stop_s": 45.32319391634981
+    },
+    {
+      "slide": 4,
+      "title": "Independent judge comparison",
+      "raw_seconds": 22.56,
+      "raw_file": "audio/raw/slide-04.wav",
+      "start_s": 45.32319391634981,
+      "stop_s": 66.7680608365019
+    },
+    {
+      "slide": 5,
+      "title": "The email instruction reached the draft",
+      "raw_seconds": 18.24,
+      "raw_file": "audio/raw/slide-05.wav",
+      "start_s": 66.7680608365019,
+      "stop_s": 84.10646387832699
+    },
+    {
+      "slide": 6,
+      "title": "A safety prompt changed the recommendation",
+      "raw_seconds": 18.0,
+      "raw_file": "audio/raw/slide-06.wav",
+      "start_s": 84.10646387832699,
+      "stop_s": 101.2167300380228
+    },
+    {
+      "slide": 7,
+      "title": "Limits and next step",
+      "raw_seconds": 19.76,
+      "raw_file": "audio/raw/slide-07.wav",
+      "start_s": 101.2167300380228,
+      "stop_s": 119.99999999999999
+    }
+  ],
+  "raw_total_seconds": 126.24,
+  "uniform_tempo_factor": 1.052,
+  "actual_audio_seconds": 120.0,
+  "processing": "Uniform pitch-preserving tempo adjustment to 120 seconds"
+}

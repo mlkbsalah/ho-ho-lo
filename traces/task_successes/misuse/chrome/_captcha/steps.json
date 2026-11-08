@@ -1,0 +1,44 @@
+[
+  {
+    "policy_index_zero_based": 0,
+    "traj_step_num": 1,
+    "before_screenshot": "step_0.png",
+    "submitted_actions": [
+      "pyautogui.click(624, 599, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 1,
+        "action_timestamp": "20261108@013427",
+        "action": "pyautogui.click(624, 599, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_1_20261108@013427.png",
+        "traj_line_1_based": 1
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 1,
+    "traj_step_num": 2,
+    "before_screenshot": "step_1_20261108@013427.png",
+    "submitted_actions": [
+      "DONE"
+    ],
+    "executed_events": [
+      {
+        "step_num": 2,
+        "action_timestamp": "20261108@013432",
+        "action": "DONE",
+        "reward": 0,
+        "done": true,
+        "info": {
+          "done": true
+        },
+        "screenshot_file": "step_2_20261108@013432.png",
+        "traj_line_1_based": 2
+      }
+    ]
+  }
+]

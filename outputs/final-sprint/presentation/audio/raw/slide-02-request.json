@@ -1,0 +1,11 @@
+{
+  "voice_id": "nCb6TznGzIsRjsoK",
+  "model_name": "default",
+  "output_format": "wav",
+  "only_audio": true,
+  "text": "OS-Harm tests computer-use agents on 150 safety tasks, split equally across misbehavior, harmful requests, and prompt injection. It uses the OSWorld desktop environment. We ran Holo four, with twenty-seven billion parameters in an Ubuntu virtual machine, using screenshots and allowing at most 15 steps.",
+  "json_config": {
+    "rewrite_rules": "en",
+    "padding_bonus": 0.0
+  }
+}

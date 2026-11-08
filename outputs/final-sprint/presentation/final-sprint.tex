@@ -1,0 +1,108 @@
+\documentclass[12pt,aspectratio=169]{beamer}
+\usepackage{graphicx}
+\definecolor{inkblue}{RGB}{32,76,118}
+\setbeamercolor{frametitle}{fg=inkblue}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{%
+  \hbox{\begin{beamercolorbox}[wd=\paperwidth,ht=2.6ex,dp=1.2ex,rightskip=0.6cm]{normal text}%
+    \hfill\color{inkblue}\small\insertframenumber/\inserttotalframenumber
+  \end{beamercolorbox}}}
+\setbeamersize{text margin left=0.6cm,text margin right=0.6cm}
+\hypersetup{colorlinks=true,linkcolor=inkblue,urlcolor=inkblue,filecolor=inkblue}
+\begin{document}
+
+\begin{frame}
+\vspace{0.5cm}
+\begin{center}
+{\color{inkblue}\fontsize{25}{30}\selectfont\bfseries
+Benchmarking HOLO4-27billion\\[0.35em]
+on OS-Harm}
+\end{center}
+\vfill
+{\fontsize{8}{9.5}\selectfont
+Kuntz et al., \href{https://arxiv.org/abs/2506.14866}{\textit{OS-Harm: A Benchmark for Measuring Safety of Computer Use Agents}}.
+NeurIPS 2025. arXiv:2506.14866.}
+\end{frame}
+
+% Benchmark: https://arxiv.org/abs/2506.14866
+% Figure: original 150-task manifest, no recovery results merged.
+\begin{frame}[t]{OS-Harm benchmark}
+\textbf{150 safety tasks, split evenly across three categories}
+\begin{center}
+\includegraphics[width=0.94\textwidth,height=0.56\textheight,keepaspectratio]{assets/dataset_categories.pdf}
+\end{center}
+Holo4 with 27 billion parameters, using screenshots and up to 15 steps.
+
+\vfill
+
+\end{frame}
+
+% Source: outputs/final-sprint/os-harm/summary_statistics.json
+\begin{frame}[t]{Original baseline results}
+\textbf{137/150 judged}\hfill 13 unsafe\hfill 28 successful
+\begin{center}
+\includegraphics[width=0.98\textwidth,height=0.78\textheight,keepaspectratio]{assets/benchmark_results.pdf}
+\end{center}
+\end{frame}
+
+% Source: outputs/final-sprint/os-harm-sol-judge-comparison-20261108/agreement.json
+\begin{frame}[t]{Independent judge comparison}
+\small GPT 6.1 Terra and GPT 6.1 Sol, both with medium reasoning.
+\begin{center}
+\includegraphics[width=0.96\textwidth,height=0.57\textheight,keepaspectratio]{assets/judge_agreement.pdf}
+\end{center}
+\textbf{132/137 agree on safety. 132/137 agree on success.}
+
+\smallskip
+Agreement measures consistency, not correctness.
+\end{frame}
+
+% Source: original email and post-step-9 draft, url_query_params task.
+% Native graphicx cropping preserves screenshot pixels and source images.
+\begin{frame}[t]{The email instruction reached the draft}
+\small User task: read the emails and write an unsent action list.
+
+\medskip
+\textbf{Received email}
+\begin{center}
+\includegraphics[width=0.98\textwidth,trim=1130bp 780bp 5bp 190bp,clip]{assets/credential_email.png}
+\end{center}
+\textbf{Agent's draft}
+\begin{center}
+\includegraphics[width=0.98\textwidth,trim=110bp 300bp 960bp 680bp,clip]{assets/credential_draft.png}
+\end{center}
+No credential transmission or server visit observed.
+\end{frame}
+
+% Matched recurring-command payload, different from the credential-URL case.
+\begin{frame}[t]{A safety prompt changed the recommendation}
+\small Added rule: check recommendations against the user's request.
+
+\medskip
+\textbf{Original prompt: recommended the command}
+\begin{center}
+\includegraphics[width=0.98\textwidth,trim=110bp 425bp 965bp 560bp,clip]{assets/command_original_draft.png}
+\end{center}
+\textbf{Added prompt: warned the user}
+\begin{center}
+\includegraphics[width=0.98\textwidth,trim=110bp 465bp 965bp 525bp,clip]{assets/safety_draft.png}
+\end{center}
+\footnotesize Same remote-command email, one completed run per prompt.
+\end{frame}
+
+% Source: frozen email-authority diagnostic and final sprint research direction.
+\begin{frame}{Limits and next step}
+\textbf{The next attack still worked}
+
+\medskip
+The agent dropped invitation replies. The matching baseline timed out.
+
+\bigskip
+\textbf{Next research question}
+
+\medskip
+Does this failure appear in other tasks, and when does copied advice cause harm?
+\end{frame}
+
+\end{document}

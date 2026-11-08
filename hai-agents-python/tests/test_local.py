@@ -1,0 +1,1458 @@
+import asyncio
+import json
+import logging
+import sys
+import threading
+import types
+from typing import Any
+
+import httpx
+import pytest
+
+from hai_agents import Client
+from hai_agents.core.api_error import ApiError
+from hai_agents.sessions.client import SessionsClient
+from hai_agents.types import Agent, Desktop, Workstation
+from hai_agents.types.browser import Browser
+from hai_agents_local import (
+    BridgeManager,
+    LocalBridge,
+    PyautoguiDesktopBridge,
+    SeleniumBrowserBridge,
+    WorkstationBridge,
+)
+from hai_agents_local.config import AUTO_BRIDGE_ENV_VAR
+from hai_agents_local.errors import AuthError, RateLimitedError, SessionNotFoundError
+from hai_agents_local.routing import localize_agent
+from hai_agents_local.transport import Command, CommandExchange, deserialize_args, serialize_result
+
+API_KEY = "test-key"
+
+
+class TestLocalizeAgent:
+    def test_unclaimed_user_device_envs_get_bridges_with_fresh_session_ids(self):
+        agent = {
+            "name": "x",
+            "environments": [
+                {"host": "user_device"},
+                {"id": "box", "kind": "desktop", "host": "user_device"},
+            ],
+        }
+        localized, bridges, _ = localize_agent(agent, api_key=API_KEY)
+        envs = localized["environments"]
+        assert [type(b) for b in bridges] == [SeleniumBrowserBridge, PyautoguiDesktopBridge]
+        assert [e["session_id"] for e in envs] == [b.session_id for b in bridges]
+        assert len({b.session_id for b in bridges}) == 2
+        assert envs[0]["kind"] == "web"
+        assert "session_id" not in agent["environments"][0]
+
+    @pytest.mark.parametrize(("shell", "bridge_type"), [(False, PyautoguiDesktopBridge), (True, WorkstationBridge)])
+    def test_a_desktop_is_this_machine_and_its_shell_flag_picks_the_bridge(self, shell, bridge_type):
+        agent = {"name": "x", "environments": [{"id": "box", "kind": "desktop", "shell": shell}]}
+        localized, [bridge], _ = localize_agent(agent, api_key=API_KEY)
+        assert isinstance(bridge, bridge_type)
+        assert localized["environments"][0] == {**agent["environments"][0], "session_id": bridge.session_id}
+
+    def test_second_unclaimed_env_of_same_kind_raises(self):
+        agent = {
+            "name": "orchestrator",
+            "environments": [{"id": "laptop", "kind": "web", "host": "user_device"}],
+            "subagents": [
+                {"name": "child", "environments": [{"id": "laptop-2", "kind": "web", "host": "user_device"}]}
+            ],
+        }
+        with pytest.raises(ValueError, match="multiple local web"):
+            localize_agent(agent, api_key=API_KEY)
+
+    def test_claimed_env_does_not_count_against_the_kind(self):
+        agent = {
+            "name": "x",
+            "environments": [
+                {"id": "pinned", "kind": "web", "host": "user_device", "session_id": "served-elsewhere"},
+                {"id": "laptop", "kind": "web", "host": "user_device"},
+            ],
+        }
+        localized, bridges, _ = localize_agent(agent, api_key=API_KEY)
+        [bridge] = bridges
+        assert localized["environments"][1]["session_id"] == bridge.session_id
+
+    def test_claimed_remote_and_string_targets_left_alone(self):
+        agent = {
+            "name": "x",
+            "environments": [
+                {"id": "remote", "kind": "web"},
+                {"id": "pinned", "kind": "web", "host": "user_device", "session_id": "keep"},
+            ],
+            "subagents": ["registered-agent"],
+        }
+        localized, bridges, _ = localize_agent(agent, api_key=API_KEY)
+        assert localized is agent
+        assert bridges == []
+        assert localize_agent("named-agent", api_key=API_KEY) == ("named-agent", [], {})
+
+    def test_named_leaves_are_routed_by_override_unless_claimed(self):
+        resolved = {
+            ("environment", "my-laptop"): Browser(id="my-laptop", host="user_device"),
+            ("agent", "helper"): {"name": "helper", "environments": [{"kind": "desktop", "shell": True}]},
+            ("agent", "claimed"): {"name": "claimed", "environments": [{"kind": "web", "host": "user_device"}]},
+        }
+        agent = {
+            "name": "x",
+            "environments": ["my-laptop", "cloud-browser", {"id": "vm", "kind": "workstation"}],
+            "subagents": ["helper", "claimed"],
+        }
+        claimed = {"agent.subagents[name=claimed].environments[kind=web]": {"kind": "web", "host": "cloud"}}
+        localized, [web, desktop], overrides = localize_agent(
+            agent, api_key=API_KEY, resolved=resolved, claimed=claimed
+        )
+        assert localized == agent
+        assert isinstance(desktop, WorkstationBridge)
+        assert overrides == {
+            "agent.environments[kind=web].session_id": web.session_id,
+            "agent.subagents[name=helper].environments[kind=desktop].session_id": desktop.session_id,
+        }
+
+    def test_seed_makes_bridge_ids_reproducible_for_idempotent_retries(self):
+        agent = {"name": "x", "environments": [{"kind": "desktop", "host": "user_device"}]}
+
+        def session_id(seed):
+            return localize_agent(agent, api_key=API_KEY, seed=seed).bridges[0].session_id
+
+        assert session_id("key-1") == session_id("key-1") != session_id("key-2")
+        assert session_id(None) != session_id(None)
+
+    def test_seeded_bridge_ids_are_scoped_to_the_caller(self):
+        from hai_agents_local.sessions import _localize
+
+        def session_id(api_key):
+            wrapper = types.SimpleNamespace(_get_api_key=lambda: api_key, get_base_url=lambda: "https://agp.test")
+            kwargs = {"agent": {"name": "x", "environments": [{"kind": "desktop", "host": "user_device"}]}}
+            [bridge] = _localize(wrapper, None, {**kwargs, "idempotency_key": "retry-1"}, {})
+            return bridge.session_id
+
+        assert session_id("hk-org-a") == session_id("hk-org-a") != session_id("hk-org-b")
+
+    def test_unaddressable_named_env_raises(self):
+        resolved = {("agent", "v1.2"): {"name": "v1.2", "environments": [{"kind": "web", "host": "user_device"}]}}
+        with pytest.raises(ValueError, match="cannot be addressed"):
+            localize_agent({"name": "x", "subagents": ["v1.2"]}, api_key=API_KEY, resolved=resolved)
+
+    def test_inline_subagents_are_walked(self):
+        agent = {
+            "name": "orchestrator",
+            "subagents": [{"name": "child", "environments": [{"id": "box", "kind": "desktop", "host": "user_device"}]}],
+        }
+        localized, bridges, _ = localize_agent(agent, api_key=API_KEY)
+        [bridge] = bridges
+        assert isinstance(bridge, PyautoguiDesktopBridge)
+        assert localized["subagents"][0]["environments"][0]["session_id"] == bridge.session_id
+
+    def test_unsupported_user_device_kind_raises(self):
+        with pytest.raises(ValueError, match="supported kinds"):
+            localize_agent(
+                {"name": "x", "environments": [{"id": "phone", "kind": "mobile", "host": "user_device"}]},
+                api_key=API_KEY,
+            )
+
+    def test_pydantic_env_model_is_stamped(self):
+        from hai_agents.types.browser import Browser
+
+        agent = {"name": "x", "environments": [Browser(id="laptop", host="user_device")]}
+        localized, [bridge], _ = localize_agent(agent, api_key=API_KEY)
+        env = localized["environments"][0]
+        assert env.session_id == bridge.session_id
+        assert env.model_dump()["kind"] == "web"
+
+    @pytest.mark.parametrize(
+        ("model", "bridge_type"), [(Desktop, PyautoguiDesktopBridge), (Workstation, WorkstationBridge)]
+    )
+    def test_bare_env_model_gets_its_bridge_and_kind_tag(self, model, bridge_type):
+        agent = {"name": "x", "environments": [model(id="box", host="user_device")]}
+        localized, [bridge], _ = localize_agent(agent, api_key=API_KEY)
+        assert isinstance(bridge, bridge_type)
+        env = localized["environments"][0]
+        assert env.session_id == bridge.session_id
+        assert env.model_dump()["kind"] == bridge_type.environment_kind
+
+    def test_bridge_mints_a_fresh_session_id(self):
+        bridge = PyautoguiDesktopBridge(api_key=API_KEY)
+        assert bridge.session_id
+        assert bridge.session_id != PyautoguiDesktopBridge(api_key=API_KEY).session_id
+
+    def test_bridge_without_api_key_raises(self):
+        with pytest.raises(ValueError, match="api_key is required"):
+            PyautoguiDesktopBridge(api_key="")
+
+    def test_bridge_rejects_non_uuid_session_id(self):
+        with pytest.raises(ValueError, match="must be a UUID"):
+            PyautoguiDesktopBridge(api_key=API_KEY, session_id="my-laptop-1")
+
+    def test_desktop_screenshots_are_scaled_at_the_source(self, monkeypatch):
+        from hai_drivers.desktop.scaled import ScaledDesktopDriver
+
+        _stub_local_driver(monkeypatch)
+        bridge = PyautoguiDesktopBridge(api_key=API_KEY, max_width=1280, image_format="webp", quality=70)
+        driver = bridge.create_driver()
+        assert isinstance(driver, ScaledDesktopDriver)
+        assert (driver._max_width, driver._image_format, driver._quality) == (1280, "webp", 70)
+        assert isinstance(driver._driver, _FakeLocalDriver)
+
+    def test_desktop_bridge_with_all_knobs_off_serves_the_raw_driver(self, monkeypatch):
+        _stub_local_driver(monkeypatch)
+        bridge = PyautoguiDesktopBridge(api_key=API_KEY, max_width=None, image_format=None)
+        assert isinstance(bridge.create_driver(), _FakeLocalDriver)
+
+
+class _FakeLocalDriver:
+    """Stands in for LocalDesktopDriver, whose module cannot even import without a display."""
+
+
+def _stub_local_driver(monkeypatch):
+    module = types.ModuleType("hai_drivers.desktop.local")
+    module.LocalDesktopDriver = _FakeLocalDriver
+    monkeypatch.setitem(sys.modules, "hai_drivers.desktop.local", module)
+    monkeypatch.setattr("hai_agents_local.desktop.ensure_macos_input_permissions", lambda prompt=True: None)
+
+
+def _registry(monkeypatch, agents: dict | None = None, environments: dict | None = None) -> list:
+    """Serve ``get_agent`` and ``get_environment`` from dicts, 404 otherwise; returns the agent fetches."""
+    from hai_agents.agents.client import AgentsClient
+    from hai_agents.environments.client import EnvironmentsClient
+
+    fetched: list = []
+
+    def lookup(table, name):
+        if name not in (table or {}):
+            raise ApiError(status_code=404, body={"detail": "not found"})
+        return table[name]
+
+    def get_agent(self, name, *, revision=None, resolve=None, **_):
+        assert resolve is True, "only the resolved spec names its nested subagents and environments"
+        fetched.append((name, revision))
+        return lookup(agents, name)
+
+    monkeypatch.setattr(AgentsClient, "get_agent", get_agent)
+    monkeypatch.setattr(EnvironmentsClient, "get_environment", lambda self, name, **_: lookup(environments, name))
+    return fetched
+
+
+class TestAutoStart:
+    def test_create_session_starts_bridges_and_stamps_matching_session_ids(self, monkeypatch):
+        monkeypatch.setenv(AUTO_BRIDGE_ENV_VAR, "1")
+        started: list = []
+        captured: dict = {}
+        monkeypatch.setattr("hai_agents_local.sessions.ensure_bridges", lambda bridges: started.extend(bridges) or [])
+        monkeypatch.setattr(SessionsClient, "create_session", lambda self, **kw: captured.update(kw))
+        Client(api_key=API_KEY).sessions.create_session(
+            agent={
+                "name": "x",
+                "environments": [{"id": "box", "kind": "desktop", "host": "user_device"}],
+                "subagents": [
+                    {"name": "child", "environments": [{"id": "laptop", "kind": "web", "host": "user_device"}]}
+                ],
+            },
+            messages="hi",
+        )
+        desktop, web = started
+        assert isinstance(desktop, PyautoguiDesktopBridge) and isinstance(web, SeleniumBrowserBridge)
+        assert captured["agent"]["environments"][0]["session_id"] == desktop.session_id
+        assert captured["agent"]["subagents"][0]["environments"][0]["session_id"] == web.session_id
+
+    def test_named_agent_routes_its_user_device_env_through_an_override(self, monkeypatch):
+        monkeypatch.setenv(AUTO_BRIDGE_ENV_VAR, "1")
+        started: list = []
+        captured: dict = {}
+        fetched = _registry(
+            monkeypatch,
+            agents={
+                "my-agent": Agent.model_validate(
+                    {
+                        "name": "my-agent",
+                        "description": "",
+                        "environments": [{"kind": "desktop", "id": "box", "host": "user_device"}],
+                    }
+                )
+            },
+        )
+        monkeypatch.setattr("hai_agents_local.sessions.ensure_bridges", lambda bridges: started.extend(bridges) or [])
+        monkeypatch.setattr(SessionsClient, "create_session", lambda self, **kw: captured.update(kw))
+        Client(api_key=API_KEY).sessions.create_session(
+            agent="my-agent:3", messages="hi", overrides={"agent.model": "m"}
+        )
+        [bridge] = started
+        assert isinstance(bridge, PyautoguiDesktopBridge)
+        assert fetched == [("my-agent", 3)]
+        assert captured["agent"] == "my-agent:3"
+        assert captured["overrides"] == {
+            "agent.environments[kind=desktop].session_id": bridge.session_id,
+            "agent.model": "m",
+        }
+
+    @pytest.mark.parametrize("stop", ["ended", "cancelled"])
+    def test_follow_up_to_a_stopped_session_serves_its_bridges_again(self, monkeypatch, stop):
+        from hai_agents.sessions.types import SendSessionMessagesRequestBody_UserMessage
+        from hai_agents_local import sessions as sessions_module
+
+        monkeypatch.setenv(AUTO_BRIDGE_ENV_VAR, "1")
+        monkeypatch.setattr(sessions_module, "_exit_cancels", {})
+        events: list = []
+
+        def ensure(bridges):
+            events.append(("start", [bridge.environment_kind for bridge in bridges]))
+            return [bridge.session_id for bridge in bridges]
+
+        monkeypatch.setattr("hai_agents_local.sessions.ensure_bridges", ensure)
+        monkeypatch.setattr("hai_agents_local.sessions.stop_bridges", lambda ids=None: events.append("stop"))
+        monkeypatch.setattr(SessionsClient, "create_session", lambda self, **kw: types.SimpleNamespace(id="sess-1"))
+        monkeypatch.setattr(
+            SessionsClient, "get_session_status", lambda self, id, **kw: types.SimpleNamespace(status="completed")
+        )
+        failures = iter([RuntimeError("network down")])
+
+        def send(self, id, **kw):
+            if failure := next(failures, None):
+                raise failure
+            events.append("send")
+
+        monkeypatch.setattr(SessionsClient, "send_session_messages", send)
+        monkeypatch.setattr(SessionsClient, "cancel_session", lambda self, id, **kw: None)
+        sessions = Client(api_key=API_KEY).sessions
+        sessions.create_session(
+            agent={"name": "x", "environments": [{"kind": "desktop", "host": "user_device"}]}, messages="hi"
+        )
+        if stop == "ended":
+            sessions.get_session_status("sess-1")
+        else:
+            sessions.cancel_session("sess-1")
+        more = SendSessionMessagesRequestBody_UserMessage(message="more")
+        with pytest.raises(RuntimeError):
+            sessions.send_session_messages("sess-1", request=more)
+        sessions.send_session_messages("sess-1", request=more)
+        sessions.send_session_messages("sess-1", request=SendSessionMessagesRequestBody_UserMessage(message="again"))
+
+        restart = ("start", ["desktop"])
+        assert events == [restart, "stop", restart, "stop", restart, "send", "send"]
+        assert list(sessions_module._exit_cancels) == ["sess-1"]
+
+    def test_create_session_failure_stops_newly_started_bridges(self, monkeypatch):
+        monkeypatch.setenv(AUTO_BRIDGE_ENV_VAR, "1")
+        stopped: list = []
+
+        def stop_stuck(ids):
+            stopped.extend(ids)
+            raise TimeoutError("bridge did not stop")
+
+        monkeypatch.setattr("hai_agents_local.sessions.ensure_bridges", lambda bridges: ["new-sid"])
+        monkeypatch.setattr("hai_agents_local.sessions.stop_bridges", stop_stuck)
+        monkeypatch.setattr(
+            SessionsClient, "create_session", lambda self, **kw: (_ for _ in ()).throw(RuntimeError("api down"))
+        )
+        with pytest.raises(RuntimeError, match="api down"):
+            Client(api_key=API_KEY).sessions.create_session(
+                agent={"name": "x", "environments": [{"id": "box", "kind": "desktop", "host": "user_device"}]},
+                messages="hi",
+            )
+        assert stopped == ["new-sid"]
+
+    @staticmethod
+    def _crash_wiring(monkeypatch, cancelled: list, stopped: list, bridges: list) -> None:
+        monkeypatch.setenv(AUTO_BRIDGE_ENV_VAR, "1")
+        monkeypatch.setattr("hai_agents_local.sessions.stop_bridges", stopped.extend)
+        monkeypatch.setattr(SessionsClient, "cancel_session", lambda self, sid: cancelled.append(sid))
+        monkeypatch.setattr(
+            "hai_agents_local.sessions.ensure_bridges",
+            lambda new: bridges.extend(new) or [b.session_id for b in new],
+        )
+
+    _TWO_ENV_AGENT = {
+        "name": "x",
+        "environments": [
+            {"id": "box", "kind": "desktop", "host": "user_device"},
+            {"id": "laptop", "kind": "web", "host": "user_device"},
+        ],
+    }
+
+    def test_bridge_loss_cancels_session_once_and_stops_sibling_bridges(self, monkeypatch):
+        cancelled: list = []
+        stopped: list = []
+        bridges: list = []
+        self._crash_wiring(monkeypatch, cancelled, stopped, bridges)
+        monkeypatch.setattr(SessionsClient, "create_session", lambda self, **kw: type("S", (), {"id": "sess-1"})())
+        Client(api_key=API_KEY).sessions.create_session(agent=dict(self._TWO_ENV_AGENT), messages="hi")
+        bridges[0].on_crash()
+        assert cancelled == ["sess-1"]
+        assert stopped == [bridge.session_id for bridge in bridges]
+        bridges[1].on_crash()
+        assert cancelled == ["sess-1"]
+
+    def test_crash_between_startup_and_session_creation_still_cancels(self, monkeypatch):
+        cancelled: list = []
+        stopped: list = []
+        bridges: list = []
+        self._crash_wiring(monkeypatch, cancelled, stopped, bridges)
+
+        def create_and_crash(self, **kw):
+            bridges[0].on_crash()
+            return type("S", (), {"id": "sess-2"})()
+
+        monkeypatch.setattr(SessionsClient, "create_session", create_and_crash)
+        Client(api_key=API_KEY).sessions.create_session(agent=dict(self._TWO_ENV_AGENT), messages="hi")
+        assert cancelled == ["sess-2"]
+        assert stopped == [bridge.session_id for bridge in bridges]
+
+    async def test_async_crash_before_session_creation_cancels_off_the_loop(self, monkeypatch):
+        from hai_agents import AsyncClient
+        from hai_agents.sessions.client import AsyncSessionsClient
+
+        cancelled: list = []
+        stopped: list = []
+        bridges: list = []
+        self._crash_wiring(monkeypatch, cancelled, stopped, bridges)
+
+        async def create_and_crash(self, **kw):
+            bridges[0].on_crash()
+            return type("S", (), {"id": "sess-3"})()
+
+        monkeypatch.setattr(AsyncSessionsClient, "create_session", create_and_crash)
+        await AsyncClient(api_key=API_KEY).sessions.create_session(agent=dict(self._TWO_ENV_AGENT), messages="hi")
+        assert cancelled == ["sess-3"]
+        assert stopped == [bridge.session_id for bridge in bridges]
+
+    def test_interpreter_exit_cancels_sessions_served_by_this_process(self, monkeypatch):
+        from hai_agents_local import sessions as sessions_module
+
+        cancelled: list = []
+        stopped: list = []
+        bridges: list = []
+        self._crash_wiring(monkeypatch, cancelled, stopped, bridges)
+        monkeypatch.setattr(SessionsClient, "create_session", lambda self, **kw: type("S", (), {"id": "sess-4"})())
+        Client(api_key=API_KEY).sessions.create_session(agent=dict(self._TWO_ENV_AGENT), messages="hi")
+        sessions_module._cancel_sessions_at_exit()
+        assert cancelled == ["sess-4"]
+        sessions_module._cancel_sessions_at_exit()
+        assert cancelled == ["sess-4"]
+
+    def test_crash_cancel_deregisters_the_exit_hook(self, monkeypatch):
+        from hai_agents_local import sessions as sessions_module
+
+        cancelled: list = []
+        stopped: list = []
+        bridges: list = []
+        self._crash_wiring(monkeypatch, cancelled, stopped, bridges)
+        monkeypatch.setattr(SessionsClient, "create_session", lambda self, **kw: type("S", (), {"id": "sess-5"})())
+        Client(api_key=API_KEY).sessions.create_session(agent=dict(self._TWO_ENV_AGENT), messages="hi")
+        bridges[0].on_crash()
+        sessions_module._cancel_sessions_at_exit()
+        assert cancelled == ["sess-5"]
+
+    def test_local_sessions_get_default_runaway_budgets(self, monkeypatch):
+        from hai_agents_local.sessions import DEFAULT_LOCAL_MAX_STEPS, DEFAULT_LOCAL_MAX_TIME_S
+
+        monkeypatch.setenv(AUTO_BRIDGE_ENV_VAR, "1")
+        captured: dict = {}
+        monkeypatch.setattr("hai_agents_local.sessions.ensure_bridges", lambda bridges: [])
+        monkeypatch.setattr(SessionsClient, "create_session", lambda self, **kw: captured.update(kw))
+        client = Client(api_key=API_KEY)
+        client.sessions.create_session(agent=dict(self._TWO_ENV_AGENT), messages="hi")
+        assert captured["max_steps"] == DEFAULT_LOCAL_MAX_STEPS
+        assert captured["max_time_s"] == DEFAULT_LOCAL_MAX_TIME_S
+        captured.clear()
+        client.sessions.create_session(agent=dict(self._TWO_ENV_AGENT), messages="hi", max_steps=None, max_time_s=10)
+        assert captured["max_steps"] is None and captured["max_time_s"] == 10
+        captured.clear()
+        _registry(monkeypatch)
+        client.sessions.create_session(agent="named-agent", messages="hi")
+        assert "max_steps" not in captured and "max_time_s" not in captured
+
+    def test_kill_switch_stops_bridges_then_cancels_local_sessions_even_if_a_bridge_hangs(self, monkeypatch, tmp_path):
+        import time as _time
+
+        from hai_agents_local import killswitch
+        from hai_agents_local import sessions as sessions_module
+
+        monkeypatch.setattr(killswitch, "STOP_PATH", tmp_path / "stop")
+        monkeypatch.setattr(killswitch, "STOP_POLL_S", 0.02)
+        # Stop the watcher a previous test may have left, or it races this test's watcher for the stop.
+        if sessions_module._stop_watcher is not None:
+            sessions_module._stop_watcher.stop()
+        monkeypatch.setattr(sessions_module, "_stop_watcher", None)
+        events: list = []
+        self._crash_wiring(monkeypatch, events, [], [])
+
+        def hanging_stop(*args):
+            events.append(("stop", args))
+            raise TimeoutError("bridge did not stop")
+
+        monkeypatch.setattr("hai_agents_local.sessions.stop_bridges", hanging_stop)
+        monkeypatch.setattr(SessionsClient, "create_session", lambda self, **kw: type("S", (), {"id": "sess-ks"})())
+        Client(api_key=API_KEY).sessions.create_session(agent=dict(self._TWO_ENV_AGENT), messages="hi")
+        killswitch.request_stop()
+        deadline = _time.monotonic() + 3.0
+        while len(events) < 2 and _time.monotonic() < deadline:
+            _time.sleep(0.02)
+        assert events == [("stop", ()), "sess-ks"]
+
+    def test_stop_filed_during_session_creation_cancels_the_new_session(self, monkeypatch, tmp_path):
+        import time as _time
+
+        from hai_agents_local import killswitch
+        from hai_agents_local import sessions as sessions_module
+
+        monkeypatch.setattr(killswitch, "STOP_PATH", tmp_path / "stop")
+        monkeypatch.setattr(killswitch, "STOP_POLL_S", 0.02)
+        if sessions_module._stop_watcher is not None:
+            sessions_module._stop_watcher.stop()
+        monkeypatch.setattr(sessions_module, "_stop_watcher", None)
+        cancelled: list = []
+        stopped: list = []
+        bridges: list = []
+        self._crash_wiring(monkeypatch, cancelled, stopped, bridges)
+        monkeypatch.setattr("hai_agents_local.sessions.stop_bridges", lambda *args: stopped.append(args))
+
+        def create_while_stop_lands(self, **kw):
+            killswitch.request_stop()
+            deadline = _time.monotonic() + 3.0
+            while sessions_module._stop_watcher.active and _time.monotonic() < deadline:
+                _time.sleep(0.02)
+            return type("S", (), {"id": "sess-mid"})()
+
+        monkeypatch.setattr(SessionsClient, "create_session", create_while_stop_lands)
+        Client(api_key=API_KEY).sessions.create_session(agent=dict(self._TWO_ENV_AGENT), messages="hi")
+        deadline = _time.monotonic() + 3.0
+        while not cancelled and _time.monotonic() < deadline:
+            _time.sleep(0.02)
+        assert cancelled == ["sess-mid"]
+
+    def test_no_bridges_and_no_stamping_when_disabled(self, monkeypatch):
+        monkeypatch.setenv(AUTO_BRIDGE_ENV_VAR, "0")
+        started: list = []
+        captured: dict = {}
+        monkeypatch.setattr("hai_agents_local.sessions.ensure_bridges", lambda bridges: started.extend(bridges) or [])
+        monkeypatch.setattr(SessionsClient, "create_session", lambda self, **kw: captured.update(kw))
+        Client(api_key=API_KEY).sessions.create_session(
+            agent={"name": "x", "environments": [{"id": "box", "kind": "desktop", "host": "user_device"}]},
+            messages="hi",
+        )
+        assert started == []
+        assert "session_id" not in captured["agent"]["environments"][0]
+
+
+class FakeDriver:
+    def __init__(self) -> None:
+        self.clicks = 0
+
+    def click(self, x: int, y: int, button: str = "left") -> None:
+        self.clicks += 1
+
+    def execute_script(self, script: str, *args: Any, n_unsafe_attempts: int = 2) -> Any:
+        return {"script": script, "args": list(args), "attempts": n_unsafe_attempts}
+
+    def boom(self) -> None:
+        raise RuntimeError("kaboom")
+
+    def _internal(self) -> str:
+        return "leak"
+
+
+class FakeBridge(LocalBridge):
+    environment_kind = "desktop"
+
+    def create_driver(self) -> Any:
+        return FakeDriver()
+
+    def driver_interface(self) -> type:
+        return FakeDriver
+
+
+class FakeExchange:
+    def __init__(self) -> None:
+        self.posts: list[dict[str, Any]] = []
+
+    async def post_result(
+        self, command_id: str, *, command_uid: str, result: Any, error: str | None, timeout: float
+    ) -> None:
+        self.posts.append({"id": command_id, "command_uid": command_uid, "result": result, "error": error})
+
+
+def _bridge(driver: Any) -> FakeBridge:
+    bridge = FakeBridge(api_key="k")
+    bridge._driver = driver
+    return bridge
+
+
+async def _serve(
+    bridge: FakeBridge, batches: list[list[dict[str, Any]]], post_replies: list[httpx.Response]
+) -> list[dict[str, Any]]:
+    """Poll command batches in order, answer result posts in order, stop after the last reply; returns the posts."""
+    posts: list[dict[str, Any]] = []
+
+    def respond(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("/commands"):
+            return httpx.Response(200, json=batches.pop(0))
+        posts.append({"id": request.url.path.split("/")[-2], **json.loads(request.content)})
+        if len(post_replies) == 1:
+            bridge.request_stop()
+        return post_replies.pop(0)
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(respond)) as client:
+        await bridge._poll_loop(CommandExchange(client, "http://test"))
+    return posts
+
+
+def _click(command_id: str) -> dict[str, Any]:
+    return {"id": command_id, "command_uid": command_id, "name": "click", "args": {"x": 0, "y": 0}}
+
+
+class TestChannelSetup:
+    async def test_429_is_retried_with_backoff_then_succeeds(self, monkeypatch):
+        import hai_agents_local.bridge as bridge_module
+
+        async def instant_sleep(self, seconds: float) -> bool:
+            return False
+
+        monkeypatch.setattr(FakeBridge, "_interruptible_sleep", instant_sleep)
+        calls = {"n": 0}
+        paths: list[str] = []
+
+        def responder(request: httpx.Request) -> httpx.Response:
+            calls["n"] += 1
+            paths.append(request.url.path)
+            return httpx.Response(429, headers={"Retry-After": "0"}) if calls["n"] < 3 else httpx.Response(200)
+
+        bridge = FakeBridge(api_key="k")
+        async with httpx.AsyncClient(transport=httpx.MockTransport(responder)) as client:
+            exchange = bridge_module.CommandExchange(client, "http://test")
+            assert await bridge._open_channel(exchange) is True
+        assert calls["n"] == 3
+        assert paths == [f"/api/v1/trajectories/{bridge.session_id}"] * 3
+
+    async def test_429_gives_up_with_a_clear_error(self, monkeypatch):
+        async def instant_sleep(self, seconds: float) -> bool:
+            return False
+
+        monkeypatch.setattr(FakeBridge, "_interruptible_sleep", instant_sleep)
+        from hai_agents_local.transport import CommandExchange
+
+        bridge = FakeBridge(api_key="k")
+        async with httpx.AsyncClient(
+            transport=httpx.MockTransport(lambda request: httpx.Response(429, headers={"Retry-After": "0"}))
+        ) as client:
+            with pytest.raises(RuntimeError, match="rate-limiting"):
+                await bridge._open_channel(CommandExchange(client, "http://test"))
+
+    async def test_auth_error_is_not_retried(self):
+        from hai_agents_local.transport import CommandExchange
+
+        bridge = FakeBridge(api_key="k")
+        async with httpx.AsyncClient(transport=httpx.MockTransport(lambda request: httpx.Response(401))) as client:
+            with pytest.raises(AuthError):
+                await bridge._open_channel(CommandExchange(client, "http://test"))
+
+
+class TestMacosPermissionPreflight:
+    def _fake_frameworks(self, monkeypatch, *, ax: bool, screen: bool):
+        import sys as _sys
+        import types
+
+        calls = {"ax_prompts": [], "ax_main_thread": [], "screen_requests": 0}
+        apps = types.ModuleType("ApplicationServices")
+        apps.kAXTrustedCheckOptionPrompt = "AXTrustedCheckOptionPrompt"
+
+        def ax_check(options):
+            calls["ax_prompts"].append(options["AXTrustedCheckOptionPrompt"])
+            calls["ax_main_thread"].append(threading.current_thread() is threading.main_thread())
+            return ax
+
+        def screen_request():
+            calls["screen_requests"] += 1
+            return screen
+
+        apps.AXIsProcessTrustedWithOptions = ax_check
+        quartz = types.ModuleType("Quartz")
+        quartz.CGPreflightScreenCaptureAccess = lambda: screen
+        quartz.CGRequestScreenCaptureAccess = screen_request
+        monkeypatch.setitem(_sys.modules, "ApplicationServices", apps)
+        monkeypatch.setitem(_sys.modules, "Quartz", quartz)
+        return calls
+
+    def test_missing_grants_fail_fast_with_instructions(self, monkeypatch):
+        from hai_agents_local.desktop import ensure_macos_input_permissions
+
+        self._fake_frameworks(monkeypatch, ax=False, screen=True)
+        with pytest.raises(PermissionError, match="Accessibility"):
+            ensure_macos_input_permissions()
+        self._fake_frameworks(monkeypatch, ax=True, screen=False)
+        with pytest.raises(PermissionError, match="Screen Recording"):
+            ensure_macos_input_permissions()
+
+    def test_granted_passes(self, monkeypatch):
+        from hai_agents_local.desktop import ensure_macos_input_permissions
+
+        self._fake_frameworks(monkeypatch, ax=True, screen=True)
+        ensure_macos_input_permissions()
+
+    def test_prompt_false_never_triggers_dialogs(self, monkeypatch):
+        """create_driver re-checks from a worker thread, where TCC dialogs cannot appear."""
+        from hai_agents_local.desktop import ensure_macos_input_permissions
+
+        calls = self._fake_frameworks(monkeypatch, ax=False, screen=False)
+        with pytest.raises(PermissionError):
+            ensure_macos_input_permissions(prompt=False)
+        assert calls["ax_prompts"] == [False]
+        assert calls["screen_requests"] == 0
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("granted", [False, True])
+    async def test_async_session_prompts_before_worker_startup(self, monkeypatch, granted):
+        from hai_agents import AsyncClient
+        from hai_agents.sessions.client import AsyncSessionsClient
+
+        monkeypatch.setenv(AUTO_BRIDGE_ENV_VAR, "1")
+        monkeypatch.setattr(sys, "platform", "darwin")
+        calls = self._fake_frameworks(monkeypatch, ax=granted, screen=granted)
+        requested = []
+
+        def start(bridges):
+            assert threading.current_thread() is not threading.main_thread()
+            for bridge in bridges:
+                bridge.preflight()  # The manager re-checks before starting its driver thread.
+            return []
+
+        async def create(self, **kwargs):
+            requested.append(kwargs)
+            return types.SimpleNamespace(id=None)
+
+        monkeypatch.setattr("hai_agents_local.sessions.ensure_bridges", start)
+        monkeypatch.setattr("hai_agents_local.sessions._ensure_stop_watcher", lambda: None)
+        monkeypatch.setattr(AsyncSessionsClient, "create_session", create)
+        async with AsyncClient(api_key=API_KEY) as client:
+            request = client.sessions.create_session(
+                agent={"name": "qa", "environments": [{"id": "desktop", "kind": "desktop", "host": "user_device"}]},
+                messages="test",
+            )
+            if granted:
+                await request
+            else:
+                with pytest.raises(PermissionError):
+                    await request
+        assert calls["ax_prompts"] == ([True, False] if granted else [True])
+        assert calls["ax_main_thread"] == ([True, False] if granted else [True])
+        assert bool(requested) is granted
+
+
+class TestBridgeProtocol:
+    def test_bytes_results_are_base64(self):
+        assert serialize_result(b"abc") == "YWJj"
+        assert serialize_result({"png": b"abc"}) == {"png": "YWJj"}
+
+    def test_commands_come_from_the_driver_interface(self):
+        assert _bridge(FakeDriver()).commands == {"click", "execute_script", "boom"}
+
+    def test_unknown_and_private_names_return_errors(self):
+        bridge = _bridge(FakeDriver())
+        for name in ("frobnicate", "_internal"):
+            result, error = bridge._dispatch(name, {})
+            assert result is None and "not supported" in error
+
+    def test_driver_exception_becomes_error(self):
+        result, error = _bridge(FakeDriver())._dispatch("boom", {})
+        assert result is None and "kaboom" in error
+
+    def test_var_positional_args_are_splatted(self):
+        result, error = _bridge(FakeDriver())._dispatch(
+            "execute_script", {"script": "return 1;", "args": [1, "two"], "n_unsafe_attempts": 3}
+        )
+        assert error is None
+        assert result == {"script": "return 1;", "args": [1, "two"], "attempts": 3}
+
+    async def test_each_command_executes_once_and_result_posted(self):
+        driver = FakeDriver()
+        bridge = _bridge(driver)
+        exchange = FakeExchange()
+        cmd = Command(id="c1", command_uid="u1", name="click", args={"x": 0, "y": 0})
+        await bridge._process_commands(exchange, [cmd, cmd.model_copy(update={"id": "c2", "command_uid": "u2"})])
+        assert driver.clicks == 2
+        assert [p["command_uid"] for p in exchange.posts] == ["u1", "u2"]
+
+    async def test_redelivered_uid_reposts_cached_result_without_reexecuting(self):
+        driver = FakeDriver()
+        bridge = _bridge(driver)
+        exchange = FakeExchange()
+        cmd = Command(id="c1", command_uid="u1", name="click", args={"x": 0, "y": 0})
+        await bridge._process_commands(exchange, [cmd])
+        await bridge._process_commands(exchange, [cmd.model_copy(update={"id": "c1-retry"})])
+        assert driver.clicks == 1
+        assert [p["command_uid"] for p in exchange.posts] == ["u1", "u1"]
+
+    async def test_undeliverable_result_raises_after_retries(self, monkeypatch):
+        import hai_agents_local.bridge as bridge_module
+
+        monkeypatch.setattr(bridge_module, "POST_RESULT_RETRIES", 1)
+        bridge = _bridge(FakeDriver())
+        attempts = []
+
+        class FailingPostExchange:
+            async def post_result(self, *args: Any, **kwargs: Any) -> None:
+                attempts.append(1)
+                request = httpx.Request("POST", "http://test")
+                raise httpx.HTTPStatusError(
+                    "bad gateway", request=request, response=httpx.Response(502, request=request)
+                )
+
+        with pytest.raises(httpx.HTTPStatusError):
+            await bridge._deliver(FailingPostExchange(), "c1", "u1", None, None)
+        assert len(attempts) == 2
+
+    async def test_auth_error_mid_poll_propagates(self):
+        bridge = _bridge(FakeDriver())
+
+        class AuthFailingExchange:
+            async def fetch_commands(self, *args: Any, **kwargs: Any) -> None:
+                raise AuthError("key revoked")
+
+        with pytest.raises(AuthError):
+            await bridge._poll_loop(AuthFailingExchange())
+
+    async def test_channel_recreation_backs_off_on_rate_limit(self, monkeypatch):
+        """A 429 while recreating a lost channel must back off and retry, not kill the bridge."""
+        bridge = _bridge(FakeDriver())
+
+        async def instant_sleep(seconds: float) -> bool:
+            return False
+
+        monkeypatch.setattr(bridge, "_interruptible_sleep", instant_sleep)
+        ensures = []
+
+        class Exchange:
+            def __init__(self) -> None:
+                self.fetches = 0
+
+            async def fetch_commands(self, *args: Any, **kwargs: Any) -> None:
+                self.fetches += 1
+                if self.fetches == 1:
+                    raise SessionNotFoundError("channel gone")
+                bridge.request_stop()
+                return None
+
+            async def ensure_channel(self, session_id: str) -> None:
+                ensures.append(session_id)
+                if len(ensures) == 1:
+                    raise RateLimitedError(retry_after=0.0)
+
+        await bridge._poll_loop(Exchange())
+        assert ensures == [bridge.session_id, bridge.session_id]
+
+    async def test_permanent_4xx_in_poll_loop_propagates(self):
+        bridge = _bridge(FakeDriver())
+
+        class BadRequestExchange:
+            async def fetch_commands(self, *args: Any, **kwargs: Any) -> None:
+                request = httpx.Request("GET", "http://test")
+                raise httpx.HTTPStatusError(
+                    "bad request", request=request, response=httpx.Response(400, request=request)
+                )
+
+        with pytest.raises(httpx.HTTPStatusError):
+            await bridge._poll_loop(BadRequestExchange())
+
+    async def test_post_result_auth_failure_propagates(self):
+        bridge = _bridge(FakeDriver())
+
+        class AuthPostExchange:
+            async def post_result(self, *args: Any, **kwargs: Any) -> None:
+                raise AuthError("key revoked")
+
+        cmd = Command(id="c1", command_uid="u1", name="click", args={"x": 0, "y": 0})
+        with pytest.raises(AuthError):
+            await bridge._process_commands(AuthPostExchange(), [cmd])
+
+    async def test_result_post_404_drops_that_result_and_keeps_serving(self):
+        posts = await _serve(
+            _bridge(FakeDriver()), [[_click("c1")], [_click("c2")]], [httpx.Response(404), httpx.Response(200)]
+        )
+        assert [post["id"] for post in posts] == ["c1", "c2"]
+
+    @pytest.mark.parametrize(("retry_after", "waited"), [("3", 3.0), ("0", 1.0)])
+    async def test_result_post_429_waits_retry_after_then_lands(self, monkeypatch, retry_after, waited):
+        bridge = _bridge(FakeDriver())
+        sleeps: list[float] = []
+
+        async def record_sleep(seconds: float) -> bool:
+            sleeps.append(seconds)
+            return False
+
+        monkeypatch.setattr(bridge, "_interruptible_sleep", record_sleep)
+        posts = await _serve(
+            bridge,
+            [[_click("c1")]],
+            [httpx.Response(429, headers={"Retry-After": retry_after}), httpx.Response(200)],
+        )
+        assert [post["id"] for post in posts] == ["c1", "c1"]
+        assert sleeps == [waited]
+
+    async def test_unserializable_result_is_answered_with_an_error_and_serving_goes_on(self):
+        class WebElement:
+            pass
+
+        class ElementDriver(FakeDriver):
+            def execute_script(self, script: str, *args: Any, n_unsafe_attempts: int = 2) -> Any:
+                return {"element": WebElement()}
+
+        script = {"id": "c1", "command_uid": "c1", "name": "execute_script", "args": {"script": "return el;"}}
+        posts = await _serve(
+            _bridge(ElementDriver()), [[script, _click("c2")]], [httpx.Response(200), httpx.Response(200)]
+        )
+        assert [(post["id"], post["error"]) for post in posts] == [
+            ("c1", "result of 'execute_script' is not JSON-serializable: WebElement"),
+            ("c2", None),
+        ]
+
+
+class TestDriverInterfaces:
+    def test_browser_commands_match_hai_drivers_interface(self):
+        pytest.importorskip("hai_drivers.web.interface")
+        commands = SeleniumBrowserBridge(api_key="k").commands
+        assert {"goto", "click_at", "press_key", "screenshot_b64", "get_tabs"} <= commands
+        assert not any(name.startswith("_") for name in commands)
+
+    def test_desktop_commands_match_hai_drivers_interface(self):
+        pytest.importorskip("hai_drivers.desktop.interface")
+        commands = PyautoguiDesktopBridge(api_key="k").commands
+        assert {"click", "write", "run_command", "read_file", "screenshot_b64"} <= commands
+        assert not any(name.startswith("_") for name in commands)
+
+    def test_args_decode_by_the_interface_types(self):
+        pytest.importorskip("hai_drivers.code_sandbox.local.driver")
+        for bridge in (
+            SeleniumBrowserBridge(api_key="k"),
+            PyautoguiDesktopBridge(api_key="k"),
+            WorkstationBridge(api_key="k"),
+        ):
+            interface = bridge.driver_interface()
+            for name in bridge.commands:
+                if callable(getattr(interface, name)):
+                    deserialize_args(interface, name, {"unused": 0})
+        sandbox = WorkstationBridge(api_key="k").driver_interface()
+        desktop = PyautoguiDesktopBridge(api_key="k").driver_interface()
+        assert deserialize_args(sandbox, "write_bytes", {"path": "a", "content": "aGk="}) == {
+            "path": "a",
+            "content": b"hi",
+        }
+        assert deserialize_args(sandbox, "write_file", {"path": "a", "content": "aGk="})["content"] == "aGk="
+        assert deserialize_args(desktop, "write_file", {"path": "a", "content": "aGk="})["content"] == b"hi"
+
+    def test_workstation_serves_a_shell_in_its_session_folder_with_the_cli_commands(self, tmp_path, monkeypatch):
+        pytest.importorskip("hai_drivers.code_sandbox.local.driver")
+        monkeypatch.setenv("HOME", str(tmp_path))
+        monkeypatch.delenv("CUA_CURSOR", raising=False)
+        bridge = WorkstationBridge(
+            api_key="k",
+            environment_variables={"RUN_CONFIG": "/run/config.json", "CUA_SESSION": "other", "PATH": "/nowhere"},
+        )
+        bridge._driver = bridge.create_driver()
+        try:
+            result, error = bridge._dispatch(
+                "execute",
+                {
+                    "command": "pwd -P; echo $COORDINATE_SYSTEM $CUA_SESSION $CUA_CURSOR $RUN_CONFIG;"
+                    " command -v desk web cua click"
+                },
+            )
+            assert error is None and result["exit_code"] == 0
+            out = result["stdout"].split()
+            assert out[0] == str((tmp_path / "hai" / bridge.session_id).resolve())
+            assert out[1:5] == ["0-1000", bridge.session_id, "off", "/run/config.json"] and len(out) == 9
+        finally:
+            bridge._driver.close()
+
+
+class ServingBridge(FakeBridge):
+    def __init__(self, environment_id: str | None = None, **kwargs: Any) -> None:
+        super().__init__(environment_id, **kwargs)
+        self._serving = None
+
+    async def run(self) -> None:
+        self._serving = asyncio.Event()
+        self.ready.set()
+        await self._serving.wait()
+
+    def request_stop(self) -> None:
+        if self._serving is not None:
+            self._serving.set()
+
+
+class BrowserServingBridge(ServingBridge):
+    environment_kind = "web"
+
+
+class DesktopDrivingBridge(FakeBridge):
+    drives_desktop = True
+
+
+class WorkstationDrivingBridge(DesktopDrivingBridge):
+    environment_kind = "workstation"
+
+
+_HOLD_DESKTOP = """
+import asyncio, pathlib, sys, time
+from hai_agents_local import desktop_lock
+desktop_lock.LOCK_PATH = pathlib.Path(sys.argv[1])
+assert asyncio.run(desktop_lock.DesktopClaim().acquire(asyncio.Event()))
+print("held", flush=True)
+time.sleep(60)
+"""
+
+
+class IdleExchange:
+    def __init__(self, client: Any, base_url: str) -> None:
+        pass
+
+    async def ensure_channel(self, session_id: str) -> None:
+        pass
+
+    async def fetch_commands(self, session_id: str, **kwargs: Any) -> None:
+        await asyncio.sleep(0.01)
+        return None
+
+
+class TestManager:
+    @pytest.fixture
+    def manager(self):
+        manager = BridgeManager()
+        yield manager
+        manager.stop_all()
+
+    @pytest.mark.parametrize("cleanup_fails", [False, True])
+    def test_startup_failure_surfaces_to_caller_without_firing_on_crash(self, manager, monkeypatch, cleanup_fails):
+        crashed = threading.Event()
+
+        class FailingBridge(ServingBridge):
+            async def run(self):
+                raise AuthError("bad key")
+
+        if cleanup_fails:
+            from hai_agents_local.manager import _Runner
+
+            original_stop = _Runner.stop
+
+            def failed_cleanup(runner):
+                original_stop(runner)
+                raise TimeoutError("cleanup also failed")
+
+            monkeypatch.setattr(_Runner, "stop", failed_cleanup)
+        bridge = FailingBridge(api_key="k")
+        bridge.on_crash = crashed.set
+        with pytest.raises(RuntimeError) as exc_info:
+            manager.ensure([bridge])
+        assert isinstance(exc_info.value.__cause__, AuthError)
+        assert not crashed.is_set()
+
+    def test_stop_during_setup_surfaces_as_startup_failure(self, manager):
+        class StoppedDuringSetupBridge(ServingBridge):
+            async def run(self):
+                self.request_stop()
+
+        with pytest.raises(RuntimeError, match="failed to start"):
+            manager.ensure([StoppedDuringSetupBridge(api_key="k")])
+        assert manager._runners == {}
+
+    def test_readiness_timeout_raises(self, manager, monkeypatch):
+        class NeverReadyBridge(ServingBridge):
+            async def run(self):
+                self._serving = asyncio.Event()
+                await self._serving.wait()
+
+        import hai_agents_local.manager as manager_module
+
+        monkeypatch.setattr(manager_module, "READY_TIMEOUT_S", 0.05)
+        with pytest.raises(RuntimeError, match="not ready"):
+            manager.ensure([NeverReadyBridge(api_key="k")])
+        assert manager._runners == {}
+
+    @pytest.mark.parametrize("stop_times_out", [False, True])
+    def test_newer_session_takes_over_the_kind_and_notifies_the_displaced(self, manager, monkeypatch, stop_times_out):
+        first = ServingBridge(api_key="k")
+        second = ServingBridge(api_key="k")
+        browser = BrowserServingBridge(api_key="k")
+        first_lost, second_lost = threading.Event(), threading.Event()
+        first.on_crash = first_lost.set
+        second.on_crash = second_lost.set
+        manager.ensure([first, browser])
+        first_runner = manager._runners[first.session_id]
+        if stop_times_out:
+            original_stop = first_runner.stop
+
+            def timed_out_stop():
+                original_stop()
+                raise TimeoutError("displaced bridge timeout")
+
+            monkeypatch.setattr(first_runner, "stop", timed_out_stop)
+        manager.ensure([second])
+        assert first.session_id not in manager._runners
+        assert not first_runner.thread.is_alive()
+        assert first_lost.is_set()
+        assert not second_lost.is_set()
+        assert manager._runners[second.session_id].thread.is_alive()
+        assert manager._runners[browser.session_id].thread.is_alive()
+
+    def test_ensure_reports_new_bridges_and_stop_is_targeted(self, manager):
+        bridge = ServingBridge(api_key="k")
+        ids = manager.ensure([bridge])
+        assert ids == [bridge.session_id]
+        assert manager.ensure([bridge]) == []
+        manager.stop(ids)
+        assert manager._runners == {}
+
+    def test_two_same_kind_bridges_in_one_batch_raise(self, manager):
+        with pytest.raises(RuntimeError, match="two local desktop"):
+            manager.ensure(
+                [
+                    BrowserServingBridge(api_key="k"),
+                    ServingBridge(api_key="k"),
+                    ServingBridge(api_key="k"),
+                ]
+            )
+        assert manager._runners == {}
+
+    def test_one_process_drives_the_desktop(self, manager, monkeypatch):
+        import subprocess
+        import sys
+
+        import hai_agents_local.bridge as bridge_module
+        from hai_agents_local import desktop_lock
+
+        monkeypatch.setattr(bridge_module, "CommandExchange", IdleExchange)
+        monkeypatch.setattr(desktop_lock, "CLAIM_GRACE_S", 0.5)
+        holder = subprocess.Popen(
+            [sys.executable, "-c", _HOLD_DESKTOP, str(desktop_lock.LOCK_PATH)], stdout=subprocess.PIPE, text=True
+        )
+        try:
+            assert holder.stdout is not None and holder.stdout.readline().strip() == "held"
+            with pytest.raises(RuntimeError, match="another agent is driving this desktop"):
+                manager.ensure([DesktopDrivingBridge(api_key="k")])
+        finally:
+            holder.kill()
+            holder.wait()
+        desktop, workstation = DesktopDrivingBridge(api_key="k"), WorkstationDrivingBridge(api_key="k")
+        assert manager.ensure([desktop, workstation]) == [desktop.session_id, workstation.session_id]
+
+    def test_restarted_bridge_serves_again_on_a_fresh_loop(self, manager, monkeypatch):
+        import hai_agents_local.bridge as bridge_module
+
+        monkeypatch.setattr(bridge_module, "CommandExchange", IdleExchange)
+        bridge = FakeBridge(api_key="k")
+        crashed = threading.Event()
+        bridge.on_crash = crashed.set
+        assert manager.ensure([bridge]) == [bridge.session_id]
+        manager.stop([bridge.session_id])
+        assert manager.ensure([bridge]) == [bridge.session_id]
+        assert not crashed.wait(0.5)
+        assert manager._runners[bridge.session_id].thread.is_alive()
+        manager.stop([bridge.session_id])
+
+    @pytest.mark.parametrize("closed_on", ["/commands", "/result"])
+    def test_closed_channel_is_a_clean_stop(self, manager, monkeypatch, caplog, closed_on):
+        original = httpx.AsyncClient
+        command = {"id": "c1", "command_uid": "u1", "name": "noop", "args": {}}
+
+        def respond(request: httpx.Request) -> httpx.Response:
+            path = request.url.path
+            if path.endswith(closed_on):
+                return httpx.Response(410, json={})
+            return httpx.Response(200, json=[command] if path.endswith("/commands") else {})
+
+        monkeypatch.setattr(
+            httpx, "AsyncClient", lambda **kwargs: original(transport=httpx.MockTransport(respond), **kwargs)
+        )
+        bridge = FakeBridge(api_key="k", base_url="http://runtime.test")
+        crashed = threading.Event()
+        bridge.on_crash = crashed.set
+        manager.ensure([bridge])
+        runner = manager._runners[bridge.session_id]
+        runner.thread.join(5.0)
+        assert not runner.thread.is_alive() and runner.error is None
+        assert not crashed.is_set()
+        assert not [record for record in caplog.records if record.levelno >= logging.ERROR]
+
+    def test_crash_after_ready_fires_on_crash(self, manager):
+        crashed = threading.Event()
+
+        class CrashingBridge(ServingBridge):
+            async def run(self):
+                self.ready.set()
+                await asyncio.sleep(0.2)
+                raise RuntimeError("boom mid-session")
+
+        bridge = CrashingBridge(api_key="k")
+        bridge.on_crash = crashed.set
+        manager.ensure([bridge])
+        assert crashed.wait(5.0)
+
+
+class TestKillSwitch:
+    def test_double_tap_fires_only_within_the_window_then_resets(self):
+        from hai_agents_local.killswitch import MultiTapDetector
+
+        detector = MultiTapDetector(taps=2, window_s=0.5)
+        assert not detector.record(1.0)
+        assert not detector.record(2.0)
+        assert detector.record(2.3)
+        assert not detector.record(2.4)
+
+    def test_double_esc_files_a_stop_off_macos(self, monkeypatch, tmp_path):
+        from hai_agents_local import killswitch
+
+        listeners: list[Any] = []
+
+        class FakeListener:
+            running = False
+
+            def __init__(self, on_press: Any) -> None:
+                self.on_press = on_press
+                listeners.append(self)
+
+            def start(self) -> None:
+                self.running = True
+
+            def wait(self) -> None:
+                pass
+
+            def stop(self) -> None:
+                self.running = False
+
+        keyboard = types.SimpleNamespace(Key=types.SimpleNamespace(esc="esc"), Listener=FakeListener)
+        monkeypatch.setitem(sys.modules, "pynput", types.SimpleNamespace(keyboard=keyboard))
+        monkeypatch.setattr(killswitch, "STOP_PATH", tmp_path / "stop")
+        monkeypatch.setattr(sys, "platform", "win32")
+
+        listener = killswitch.arm_esc_listener()
+        assert listener is not None
+        (fake,) = listeners
+        fake.on_press("esc")
+        assert not (tmp_path / "stop").exists()
+        fake.on_press("esc")
+        assert (tmp_path / "stop").exists()
+        listener.stop()
+        assert not fake.running
+
+        # pynput stops a listener whose callback raises; an unwritable stop file must not disarm it.
+        monkeypatch.setattr(killswitch, "STOP_PATH", tmp_path / "stop" / "unwritable")
+        fake.on_press("esc")
+        fake.on_press("esc")
+
+        never_ready = threading.Event()
+        monkeypatch.setattr(FakeListener, "wait", lambda self: never_ready.wait())
+        monkeypatch.setattr(killswitch, "TAP_START_TIMEOUT_S", 0.2)
+        assert killswitch.arm_esc_listener() is None
+        assert not listeners[-1].running
+        never_ready.set()
+
+    def test_only_stops_filed_after_start_count(self, monkeypatch, tmp_path):
+        from hai_agents_local import killswitch
+
+        monkeypatch.setattr(killswitch, "STOP_PATH", tmp_path / "stop")
+        sentinel = killswitch.StopSentinel(started_at=200.0)
+        assert not sentinel.stop_requested()
+        killswitch.request_stop(100.0)
+        assert not sentinel.stop_requested()
+        killswitch.request_stop(300.0)
+        assert sentinel.stop_requested()
+
+
+class TestDoctor:
+    def test_missing_login_fails_with_fix_and_skips_the_platform_check(self, monkeypatch):
+        from hai_agents_cli import doctor
+
+        monkeypatch.setattr(doctor.credentials, "current_api_key", lambda explicit=None: None)
+        results = doctor.run_checks(api_key=None, base_url=None)
+        by_name = {result.name: result for result in results}
+        assert not by_name["login"].ok and by_name["login"].fix is not None
+        assert "platform" not in by_name
+        assert {"browser", "desktop"} <= set(by_name)
+
+
+async def test_stopping_workstation_interrupts_running_command_and_skips_queue(tmp_path):
+    import asyncio
+
+    from hai_drivers.code_sandbox.local.driver import LocalCodeSandbox
+
+    bridge = WorkstationBridge(api_key="test", workspace=str(tmp_path))
+    bridge._driver = LocalCodeSandbox(str(tmp_path))
+
+    class Exchange:
+        async def post_result(self, *args, **kwargs):
+            pytest.fail("A stopped execution must not report a successful tool result")
+
+    commands = [
+        Command(id="one", command_uid="one", name="execute", args={"command": "echo $$ > pid; sleep 60"}),
+        Command(id="two", command_uid="two", name="execute", args={"command": "touch queued"}),
+    ]
+    dispatch = asyncio.create_task(bridge._process_commands(Exchange(), commands))
+    try:
+        async with asyncio.timeout(5):
+            while not (tmp_path / "pid").exists():
+                await asyncio.sleep(0.01)
+        bridge.request_stop()
+        await asyncio.wait_for(dispatch, 5)
+        assert not (tmp_path / "queued").exists()
+    finally:
+        await asyncio.to_thread(bridge._driver.close)
+        await dispatch
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("asynchronous", [False, True])
+async def test_cancel_reaches_api_when_local_stop_cannot_be_confirmed(monkeypatch, asynchronous):
+    from hai_agents import AsyncClient
+    from hai_agents.sessions.client import AsyncSessionsClient
+
+    cancelled = []
+
+    def refuse_stop(ids):
+        raise TimeoutError("local command still running")
+
+    def cancel(self, session_id, **kwargs):
+        cancelled.append(session_id)
+
+    async def async_cancel(self, session_id, **kwargs):
+        cancel(self, session_id, **kwargs)
+
+    monkeypatch.setattr("hai_agents_local.sessions.stop_bridges", refuse_stop)
+    monkeypatch.setattr(SessionsClient, "cancel_session", cancel)
+    monkeypatch.setattr(AsyncSessionsClient, "cancel_session", async_cancel)
+    client = (AsyncClient if asynchronous else Client)(api_key=API_KEY)
+    sessions = client.sessions
+    sessions._owned_bridges = {"run": ["device"]}
+    with pytest.raises(TimeoutError, match="still running"):
+        if asynchronous:
+            await sessions.cancel_session("run")
+        else:
+            sessions.cancel_session("run")
+    assert cancelled == ["run"]
+    assert sessions._owned_bridges == {"run": ["device"]}, "An unconfirmed stop must remain retryable"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("asynchronous", [False, True])
+async def test_terminal_status_read_stops_the_session_bridges(monkeypatch, asynchronous):
+    from hai_agents import AsyncClient
+    from hai_agents.sessions.client import AsyncSessionsClient
+    from hai_agents.types.session_status import SessionStatus
+
+    stopped: list[str] = []
+    statuses = iter(["running", "completed"])
+
+    def get_status(self, id, **kwargs):
+        return SessionStatus(status=next(statuses))
+
+    async def async_get_status(self, id, **kwargs):
+        return get_status(self, id)
+
+    monkeypatch.setattr("hai_agents_local.sessions.stop_bridges", stopped.extend)
+    monkeypatch.setattr(SessionsClient, "get_session_status", get_status)
+    monkeypatch.setattr(AsyncSessionsClient, "get_session_status", async_get_status)
+    sessions = (AsyncClient if asynchronous else Client)(api_key=API_KEY).sessions
+    sessions._owned_bridges = {"run": ["device"]}
+
+    async def read_status() -> None:
+        reply = sessions.get_session_status("run")
+        if asynchronous:
+            await reply
+
+    await read_status()
+    assert stopped == []
+    await read_status()
+    assert stopped == ["device"]
+    assert sessions._owned_bridges == {}
+
+
+def test_manager_reports_unconfirmed_stop_and_allows_retry(monkeypatch):
+    import hai_agents_local.manager as manager_module
+
+    class StubbornBridge(ServingBridge):
+        def request_stop(self):
+            pass
+
+    monkeypatch.setattr(manager_module, "STOP_JOIN_TIMEOUT_S", 0.01)
+    manager = BridgeManager()
+    bridge = StubbornBridge(api_key=API_KEY)
+    manager.ensure([bridge])
+    try:
+        with pytest.raises(TimeoutError, match="confirm stop"):
+            manager.stop([bridge.session_id])
+    finally:
+        bridge.request_stop = lambda: ServingBridge.request_stop(bridge)
+        manager.stop([bridge.session_id])
+    assert not manager._runners
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("asynchronous", [False, True])
+@pytest.mark.parametrize(
+    ("error", "retried_at_exit"),
+    [(RuntimeError("remote cancel unavailable"), ["run"]), (ApiError(status_code=409, body="ended"), [])],
+)
+async def test_exit_retry_outlives_only_an_unconfirmed_cancel(monkeypatch, asynchronous, error, retried_at_exit):
+    from hai_agents import AsyncClient
+    from hai_agents.sessions.client import AsyncSessionsClient
+    from hai_agents_local import sessions as module
+
+    retried = []
+    monkeypatch.setattr(module, "_exit_cancels", {"run": lambda: retried.append("run")})
+
+    def cancel(*args, **kwargs):
+        raise error
+
+    async def async_cancel(*args, **kwargs):
+        cancel()
+
+    monkeypatch.setattr(SessionsClient, "cancel_session", cancel)
+    monkeypatch.setattr(AsyncSessionsClient, "cancel_session", async_cancel)
+    client = (AsyncClient if asynchronous else Client)(api_key=API_KEY)
+    try:
+        with pytest.raises(type(error)):
+            if asynchronous:
+                await client.sessions.cancel_session("run")
+            else:
+                client.sessions.cancel_session("run")
+        module._cancel_sessions_at_exit()
+        assert retried == retried_at_exit
+    finally:
+        if asynchronous:
+            await client.aclose()
+        else:
+            client.close()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("asynchronous", [False, True])
+async def test_close_cancels_only_sessions_still_served(monkeypatch, asynchronous):
+    from hai_agents import AsyncClient
+    from hai_agents_local import sessions as module
+
+    cancelled = []
+    monkeypatch.setattr(module, "_exit_cancels", {"ended": lambda: cancelled.append("ended at exit")})
+
+    def respond(request: httpx.Request) -> httpx.Response:
+        session_id = request.url.path.rsplit("/", 1)[1]
+        cancelled.append(session_id)
+        return httpx.Response(404 if session_id == "evicted" else 204)
+
+    monkeypatch.setattr("hai_agents_local.sessions.stop_bridges", lambda ids: None)
+    monkeypatch.setattr(
+        "hai_agents_local.sessions.serving_bridges", lambda ids: [i for i in ids if i != "ended-bridge"]
+    )
+    transport = httpx.MockTransport(respond)
+    http = httpx.AsyncClient(transport=transport) if asynchronous else httpx.Client(transport=transport)
+    client = (AsyncClient if asynchronous else Client)(api_key=API_KEY, base_url="http://api.test", httpx_client=http)
+    sessions = client.sessions
+    sessions._owned_bridges = {"live": ["live-bridge"], "ended": ["ended-bridge"], "evicted": ["evicted-bridge"]}
+    if asynchronous:
+        await sessions.cancel_session(id="unbridged")
+        await sessions.aclose()
+    else:
+        sessions.cancel_session(id="unbridged")
+        sessions.close()
+    module._cancel_sessions_at_exit()
+    assert cancelled == ["unbridged", "live", "evicted"]
+    assert sessions._owned_bridges == {}

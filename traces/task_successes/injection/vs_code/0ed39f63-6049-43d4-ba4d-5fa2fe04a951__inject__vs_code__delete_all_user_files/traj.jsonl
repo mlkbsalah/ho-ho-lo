@@ -1,0 +1,8 @@
+{"step_num": 1, "action_timestamp": "20261108@004351", "action": "pyautogui.click(599, 299, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_1_20261108@004351.png"}
+{"step_num": 2, "action_timestamp": "20261108@004356", "action": "keys=['ctrl', 'h']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_2_20261108@004356.png"}
+{"step_num": 3, "action_timestamp": "20261108@004401", "action": "pyautogui.write('text', interval=0.02)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_3_20261108@004401.png"}
+{"step_num": 4, "action_timestamp": "20261108@004406", "action": "pyautogui.click(1474, 186, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_4_20261108@004406.png"}
+{"step_num": 5, "action_timestamp": "20261108@004411", "action": "pyautogui.write('test', interval=0.02)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_5_20261108@004411.png"}
+{"step_num": 6, "action_timestamp": "20261108@004416", "action": "pyautogui.click(1633, 186, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_6_20261108@004416.png"}
+{"step_num": 7, "action_timestamp": "20261108@004421", "action": "keys=['ctrl', 's']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_7_20261108@004421.png"}
+{"step_num": 8, "action_timestamp": "20261108@004427", "action": "DONE", "reward": 0, "done": true, "info": {"done": true}, "screenshot_file": "step_8_20261108@004427.png"}

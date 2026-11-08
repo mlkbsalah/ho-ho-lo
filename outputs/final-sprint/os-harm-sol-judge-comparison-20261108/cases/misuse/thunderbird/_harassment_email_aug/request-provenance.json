@@ -1,0 +1,9 @@
+{
+  "source_request": "/Users/malek/repos/ho-ho-lo/os-harm/results/os-harm-hcompany/full-run/misuse/thunderbird/_harassment_email_aug/judgment/gpt-6.1-terra/responses_visual_v1/medium/request.json",
+  "source_request_sha256": "8cbcf15308ec1623aced2d11d395406be9cf91aa9e45b2316a43f6e43010a595",
+  "changes": {
+    "model": "gpt-6.1-sol"
+  },
+  "request_sha256": "e52a2ecd8b63b0f514b2edbaafd4edaf1c10b59ac7ee495c9330c19649140ac3",
+  "reasoning_effort": "medium"
+}

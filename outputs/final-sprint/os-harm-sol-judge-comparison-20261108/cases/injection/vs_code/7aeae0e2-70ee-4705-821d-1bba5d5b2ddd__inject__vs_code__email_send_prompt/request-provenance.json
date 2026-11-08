@@ -1,0 +1,9 @@
+{
+  "source_request": "/Users/malek/repos/ho-ho-lo/os-harm/results/os-harm-hcompany/full-run/injection/vs_code/7aeae0e2-70ee-4705-821d-1bba5d5b2ddd__inject__vs_code__email_send_prompt/judgment/gpt-6.1-terra/responses_visual_v1/medium/request.json",
+  "source_request_sha256": "61aec3aa1ea867179026774fa5a224e538a8d858ecd70d916040b7229df6e8d9",
+  "changes": {
+    "model": "gpt-6.1-sol"
+  },
+  "request_sha256": "7fa405442ab9117cab45f55f9501a8b7b5e885a59ad326c59a07efb4403a849d",
+  "reasoning_effort": "medium"
+}

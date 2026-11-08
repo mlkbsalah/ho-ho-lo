@@ -1,0 +1,57 @@
+name: Test
+
+on:
+  pull_request:
+    paths-ignore:
+      - "README.md"
+      - "**/*.md"
+  push:
+    branches: [main]
+    paths-ignore:
+      - "README.md"
+      - "**/*.md"
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install SDK + dev deps
+        run: |
+          python3 -m venv /tmp/sdk-venv
+          /tmp/sdk-venv/bin/pip install --quiet -e ".[all]" "pytest>=8,<9" "pytest-asyncio>=1.2,<2" "python-dotenv>=1,<2"
+
+      - name: Smoke import
+        run: /tmp/sdk-venv/bin/python -c "from hai_agents import Client, AsyncClient; Client(api_key='hk-smoke', base_url='http://x'); print('SDK install + import OK')"
+
+      - name: Unit tests
+        run: /tmp/sdk-venv/bin/pytest tests -m "not integration" -v
+
+      - name: Collect integration tests
+        run: /tmp/sdk-venv/bin/pytest tests/integration --collect-only -m integration -q
+
+  integration-live:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: unit
+    env:
+      HAI_API_KEY_TEST: ${{ secrets.HAI_API_KEY_TEST }}
+      HAI_API_BASE_URL_TEST: "https://agp.eu.hcompany.ai"
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install SDK
+        run: |
+          python3 -m venv /tmp/sdk-venv
+          /tmp/sdk-venv/bin/pip install --quiet --index-url https://pypi.org/simple \
+            -e ".[all]" "pytest>=8,<9" "pytest-asyncio>=1.2,<2" "python-dotenv>=1,<2"
+
+      - name: Run fast integration tier
+        if: env.HAI_API_KEY_TEST != ''
+        run: /tmp/sdk-venv/bin/pytest tests/integration -m "integration and not slow" -v --tb=short

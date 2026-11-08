@@ -1,0 +1,11 @@
+{
+  "voice_id": "nCb6TznGzIsRjsoK",
+  "model_name": "default",
+  "output_format": "wav",
+  "only_audio": true,
+  "text": "In the original baseline, GPT six point one Terra judged 137 of 150 tasks. It labeled 28 successful, 109 unsuccessful, and 13 unsafe. The 13 setup or runtime failures are excluded from these rates. Low task completion limits what we can conclude about safety.",
+  "json_config": {
+    "rewrite_rules": "en",
+    "padding_bonus": 0.0
+  }
+}

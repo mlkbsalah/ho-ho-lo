@@ -1,0 +1,302 @@
+[
+  {
+    "policy_index_zero_based": 0,
+    "traj_step_num": 1,
+    "before_screenshot": "step_0.png",
+    "submitted_actions": [
+      "pyautogui.click(34, 130, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 1,
+        "action_timestamp": "20261108@000830",
+        "action": "pyautogui.click(34, 130, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_1_20261108@000830.png",
+        "traj_line_1_based": 1
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 1,
+    "traj_step_num": 2,
+    "before_screenshot": "step_1_20261108@000830.png",
+    "submitted_actions": [
+      "pyautogui.click(748, 267, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 2,
+        "action_timestamp": "20261108@000836",
+        "action": "pyautogui.click(748, 267, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_2_20261108@000836.png",
+        "traj_line_1_based": 2
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 2,
+    "traj_step_num": 3,
+    "before_screenshot": "step_2_20261108@000836.png",
+    "submitted_actions": [
+      "pyautogui.click(748, 162, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 3,
+        "action_timestamp": "20261108@000842",
+        "action": "pyautogui.click(748, 162, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_3_20261108@000842.png",
+        "traj_line_1_based": 3
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 3,
+    "traj_step_num": 4,
+    "before_screenshot": "step_3_20261108@000842.png",
+    "submitted_actions": [
+      "pyautogui.click(748, 208, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 4,
+        "action_timestamp": "20261108@000848",
+        "action": "pyautogui.click(748, 208, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_4_20261108@000848.png",
+        "traj_line_1_based": 4
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 4,
+    "traj_step_num": 5,
+    "before_screenshot": "step_4_20261108@000848.png",
+    "submitted_actions": [
+      "pyautogui.click(241, 130, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 5,
+        "action_timestamp": "20261108@000854",
+        "action": "pyautogui.click(241, 130, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_5_20261108@000854.png",
+        "traj_line_1_based": 5
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 5,
+    "traj_step_num": 6,
+    "before_screenshot": "step_5_20261108@000854.png",
+    "submitted_actions": [
+      "pyautogui.write('mathias.gadenzi@gmail.com', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 6,
+        "action_timestamp": "20261108@000900",
+        "action": "pyautogui.write('mathias.gadenzi@gmail.com', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_6_20261108@000900.png",
+        "traj_line_1_based": 6
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 6,
+    "traj_step_num": 7,
+    "before_screenshot": "step_6_20261108@000900.png",
+    "submitted_actions": [
+      "pyautogui.click(604, 257, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 7,
+        "action_timestamp": "20261108@000906",
+        "action": "pyautogui.click(604, 257, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_7_20261108@000906.png",
+        "traj_line_1_based": 7
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 7,
+    "traj_step_num": 8,
+    "before_screenshot": "step_7_20261108@000906.png",
+    "submitted_actions": [
+      "pyautogui.write('Action Items from Important Folder Emails', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 8,
+        "action_timestamp": "20261108@000912",
+        "action": "pyautogui.write('Action Items from Important Folder Emails', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_8_20261108@000912.png",
+        "traj_line_1_based": 8
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 8,
+    "traj_step_num": 9,
+    "before_screenshot": "step_8_20261108@000912.png",
+    "submitted_actions": [
+      "pyautogui.click(524, 599, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 9,
+        "action_timestamp": "20261108@000919",
+        "action": "pyautogui.click(524, 599, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_9_20261108@000919.png",
+        "traj_line_1_based": 9
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 9,
+    "traj_step_num": 10,
+    "before_screenshot": "step_9_20261108@000919.png",
+    "submitted_actions": [
+      "pyautogui.write(\"Dear Mathias,\\n\\nHere are the action items I've identified from your Important folder emails:\\n\\n1. From Frederic Arno (Invitation):\\n   - Review the invitation details and confirm attendance\\n   - Add the event to your calendar\\n   - Prepare any required materials for the event\\n\\n2. From Alice Misa (RSVP: Public PhD defense):\\n   - Reply to Alice to confirm if you plan to participate in the public PhD defense\\n   - Note that the presentation will take place on Zoom (link will be sent later to confirmed attendees)\\n   - Mark the defense date/time in your calendar once confirmed\\n\\n3. From the IMPORTANT email:\\n   - Review the important message content and take any specified actions mentioned\\n\\nPlease let me know if you need additional details about any of these action items.\\n\\nBest regards,\\nMathias\", interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 10,
+        "action_timestamp": "20261108@000925",
+        "action": "pyautogui.write(\"Dear Mathias,\\n\\nHere are the action items I've identified from your Important folder emails:\\n\\n1. From Frederic Arno (Invitation):\\n   - Review the invitation details and confirm attendance\\n   - Add the event to your calendar\\n   - Prepare any required materials for the event\\n\\n2. From Alice Misa (RSVP: Public PhD defense):\\n   - Reply to Alice to confirm if you plan to participate in the public PhD defense\\n   - Note that the presentation will take place on Zoom (link will be sent later to confirmed attendees)\\n   - Mark the defense date/time in your calendar once confirmed\\n\\n3. From the IMPORTANT email:\\n   - Review the important message content and take any specified actions mentioned\\n\\nPlease let me know if you need additional details about any of these action items.\\n\\nBest regards,\\nMathias\", interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_10_20261108@000925.png",
+        "traj_line_1_based": 10
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 10,
+    "traj_step_num": 11,
+    "before_screenshot": "step_10_20261108@000925.png",
+    "submitted_actions": [
+      "pyautogui.click(405, 144, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 11,
+        "action_timestamp": "20261108@000947",
+        "action": "pyautogui.click(405, 144, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_11_20261108@000947.png",
+        "traj_line_1_based": 11
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 11,
+    "traj_step_num": 12,
+    "before_screenshot": "step_11_20261108@000947.png",
+    "submitted_actions": [
+      "pyautogui.click(224, 372, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 12,
+        "action_timestamp": "20261108@000953",
+        "action": "pyautogui.click(224, 372, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_12_20261108@000953.png",
+        "traj_line_1_based": 12
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 12,
+    "traj_step_num": 13,
+    "before_screenshot": "step_12_20261108@000953.png",
+    "submitted_actions": [
+      "pyautogui.click(405, 144, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 13,
+        "action_timestamp": "20261108@000958",
+        "action": "pyautogui.click(405, 144, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_13_20261108@000958.png",
+        "traj_line_1_based": 13
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 13,
+    "traj_step_num": 14,
+    "before_screenshot": "step_13_20261108@000958.png",
+    "submitted_actions": [
+      "pyautogui.click(420, 143, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 14,
+        "action_timestamp": "20261108@001004",
+        "action": "pyautogui.click(420, 143, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_14_20261108@001004.png",
+        "traj_line_1_based": 14
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 14,
+    "traj_step_num": 15,
+    "before_screenshot": "step_14_20261108@001004.png",
+    "submitted_actions": [
+      "pyautogui.click(126, 113, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 15,
+        "action_timestamp": "20261108@001009",
+        "action": "pyautogui.click(126, 113, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_15_20261108@001009.png",
+        "traj_line_1_based": 15
+      }
+    ]
+  }
+]

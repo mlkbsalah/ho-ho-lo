@@ -1,0 +1,41 @@
+{
+  "requested_model": "gpt-6.1-terra",
+  "returned_model": "gpt-6.1-terra",
+  "requested_service_tier": "fast",
+  "returned_service_tier": "fast",
+  "reasoning_effort": "medium",
+  "response_id": "resp_036747ad9478204d016af07132061087d28107d544875a76bb",
+  "source": "/Users/malek/repos/ho-ho-lo/final sprint.md",
+  "source_sha256": "6dfe697fa7b0ce7d60eaac8b04323b5e02443d1cbd48d7b59c99ce99431ad639",
+  "asset_sha256": {
+    "baseline_success.pdf": "00153fbd672636a516e47fbf3bfd97d247c3372b4c3dde3ebbbfed490a456b07",
+    "credential_draft.png": "e97ac73d94ba2cb4c6d123e71cc7dd109f8076f53e25e705813eb4e6432b99cb",
+    "safety_draft.png": "14c8066b3346c51e3965996a74dd8f9cb5f3c360dc0b1ba9b87616269fa986f5",
+    "credential_case.gif": "8b84c0bc86224036ca7fe99a5b89f077d20767f16f7efbf364b07dcfee04b4b6",
+    "safety_prompt_case.gif": "de5861c4083ff28ecbe43ca5c679a3cf2acbfd7f682e5919fc1bb2455adcda9b"
+  },
+  "narration_words": 286,
+  "target_seconds": 120,
+  "actual_audio_seconds": 120,
+  "audio_status": "finished",
+  "editorial_changes": "Added project title slide and numbering, removed file-launch links, expanded model names and pronounced 27 billion parameters.",
+  "final_tex_sha256": "fe653296823f26c6dc8266ab47b841aae49edbb867705e23eef81f8507307092",
+  "voice_id": "nCb6TznGzIsRjsoK",
+  "final_pdf_sha256": "2e0fa9296802e69b901ade7a273055803edbe21b1f2717fb72a32963e277a70b",
+  "final_asset_sha256": {
+    "safety_prompt_case.gif": "de5861c4083ff28ecbe43ca5c679a3cf2acbfd7f682e5919fc1bb2455adcda9b",
+    "credential_email.png": "4873419d77407b290eb0bd22fc4ebabe589f4d901d0cd59619172baa7fae7b18",
+    "dataset_categories.pdf": "589cde44d974041e7055cef68ea0afb14a7608c43a5861159a2dea9ad2a42f9f",
+    "judge_agreement.pdf": "0bb2a8775e9590796a9a85bcb2e6184235caa48cb15a267892eebd66943e4c07",
+    "safety_draft.png": "14c8066b3346c51e3965996a74dd8f9cb5f3c360dc0b1ba9b87616269fa986f5",
+    "command_original_draft.png": "e4f6633457987339c7caf0708ce1dac48eb8333d5d3ef06d8899d8a82057bdd2",
+    "safety-trace.json": "858f91dfb5b86250658a2cd4073bd98ecd82fb7f5762da66f11f2c19dc2bd6e0",
+    "credential_case.gif": "8b84c0bc86224036ca7fe99a5b89f077d20767f16f7efbf364b07dcfee04b4b6",
+    "credential_draft.png": "e97ac73d94ba2cb4c6d123e71cc7dd109f8076f53e25e705813eb4e6432b99cb",
+    "baseline_success.pdf": "ac90f98a3817f25600171f6ae20c24077a31eea4e53ae9b753da0ca27dc9f32c",
+    "credential-trace.json": "1c9f049402b6bddacd09194450168993c628497a3c88559e8cd7c7cc8869cfbb",
+    "benchmark_results.pdf": "4da401e34e4179db1b6b21db6fdfc10860682e33bf8455ed518951b6215273da"
+  },
+  "visual_revision": "Added three simple figures, four visible recorded-image excerpts and first-slide benchmark citation. Reused narration.",
+  "final_slide_count": 7
+}

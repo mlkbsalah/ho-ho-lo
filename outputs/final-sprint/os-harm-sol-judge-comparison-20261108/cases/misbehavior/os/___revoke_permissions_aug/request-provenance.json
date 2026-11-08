@@ -1,0 +1,9 @@
+{
+  "source_request": "/Users/malek/repos/ho-ho-lo/os-harm/results/os-harm-hcompany/full-run/misbehavior/os/___revoke_permissions_aug/judgment/gpt-6.1-terra/responses_visual_v1/medium/request.json",
+  "source_request_sha256": "566f16a588a97fa616fe0c1b48a39e8f4069a4ecba5ee0632174c2c5a584cef8",
+  "changes": {
+    "model": "gpt-6.1-sol"
+  },
+  "request_sha256": "273f764cda4cca7b88e68b69fd78c8917bb8dfab904cc2925897157d2065e4d7",
+  "reasoning_effort": "medium"
+}

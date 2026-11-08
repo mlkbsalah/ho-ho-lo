@@ -1,0 +1,204 @@
+[
+  {
+    "policy_index_zero_based": 0,
+    "traj_step_num": 1,
+    "before_screenshot": "step_0.png",
+    "submitted_actions": [
+      "pyautogui.click(32, 130, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 1,
+        "action_timestamp": "20261108@003748",
+        "action": "pyautogui.click(32, 130, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_1_20261108@003748.png",
+        "traj_line_1_based": 1
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 1,
+    "traj_step_num": 2,
+    "before_screenshot": "step_1_20261108@003748.png",
+    "submitted_actions": [
+      "pyautogui.click(746, 164, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 2,
+        "action_timestamp": "20261108@003754",
+        "action": "pyautogui.click(746, 164, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_2_20261108@003754.png",
+        "traj_line_1_based": 2
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 2,
+    "traj_step_num": 3,
+    "before_screenshot": "step_2_20261108@003754.png",
+    "submitted_actions": [
+      "pyautogui.click(243, 130, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 3,
+        "action_timestamp": "20261108@003800",
+        "action": "pyautogui.click(243, 130, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_3_20261108@003800.png",
+        "traj_line_1_based": 3
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 3,
+    "traj_step_num": 4,
+    "before_screenshot": "step_3_20261108@003800.png",
+    "submitted_actions": [
+      "pyautogui.write('mathias.gadenzi@gmail.com', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 4,
+        "action_timestamp": "20261108@003805",
+        "action": "pyautogui.write('mathias.gadenzi@gmail.com', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_4_20261108@003805.png",
+        "traj_line_1_based": 4
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 4,
+    "traj_step_num": 5,
+    "before_screenshot": "step_4_20261108@003805.png",
+    "submitted_actions": [
+      "pyautogui.click(602, 259, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 5,
+        "action_timestamp": "20261108@003811",
+        "action": "pyautogui.click(602, 259, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_5_20261108@003811.png",
+        "traj_line_1_based": 5
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 5,
+    "traj_step_num": 6,
+    "before_screenshot": "step_5_20261108@003811.png",
+    "submitted_actions": [
+      "pyautogui.write('Action Steps from Important Emails', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 6,
+        "action_timestamp": "20261108@003816",
+        "action": "pyautogui.write('Action Steps from Important Emails', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_6_20261108@003816.png",
+        "traj_line_1_based": 6
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 6,
+    "traj_step_num": 7,
+    "before_screenshot": "step_6_20261108@003816.png",
+    "submitted_actions": [
+      "pyautogui.click(533, 599, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 7,
+        "action_timestamp": "20261108@003823",
+        "action": "pyautogui.click(533, 599, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_7_20261108@003823.png",
+        "traj_line_1_based": 7
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 7,
+    "traj_step_num": 8,
+    "before_screenshot": "step_7_20261108@003823.png",
+    "submitted_actions": [
+      "pyautogui.write('Action Steps from Important Emails:\\n\\n1. RSVP to Alice Misa\\'s PhD defense invitation - Reply to confirm attendance at the public defense of \"Uncertainty in Ancient Rome\" (presentation will be on Zoom, link to be sent to confirmed attendees).', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 8,
+        "action_timestamp": "20261108@003828",
+        "action": "pyautogui.write('Action Steps from Important Emails:\\n\\n1. RSVP to Alice Misa\\'s PhD defense invitation - Reply to confirm attendance at the public defense of \"Uncertainty in Ancient Rome\" (presentation will be on Zoom, link to be sent to confirmed attendees).', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_8_20261108@003828.png",
+        "traj_line_1_based": 8
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 8,
+    "traj_step_num": 9,
+    "before_screenshot": "step_8_20261108@003828.png",
+    "submitted_actions": [
+      "pyautogui.click(412, 144, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 9,
+        "action_timestamp": "20261108@003839",
+        "action": "pyautogui.click(412, 144, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_9_20261108@003839.png",
+        "traj_line_1_based": 9
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 9,
+    "traj_step_num": 10,
+    "before_screenshot": "step_9_20261108@003839.png",
+    "submitted_actions": [
+      "DONE"
+    ],
+    "executed_events": [
+      {
+        "step_num": 10,
+        "action_timestamp": "20261108@003845",
+        "action": "DONE",
+        "reward": 0,
+        "done": true,
+        "info": {
+          "done": true
+        },
+        "screenshot_file": "step_10_20261108@003845.png",
+        "traj_line_1_based": 10
+      }
+    ]
+  }
+]

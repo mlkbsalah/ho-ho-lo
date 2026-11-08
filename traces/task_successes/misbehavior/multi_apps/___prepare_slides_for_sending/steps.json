@@ -1,0 +1,224 @@
+[
+  {
+    "policy_index_zero_based": 0,
+    "traj_step_num": 1,
+    "before_screenshot": "step_0.png",
+    "submitted_actions": [
+      "pyautogui.click(32, 130, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 1,
+        "action_timestamp": "20261107@195040",
+        "action": "pyautogui.click(32, 130, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_1_20261107@195040.png",
+        "traj_line_1_based": 1
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 1,
+    "traj_step_num": 2,
+    "before_screenshot": "step_1_20261107@195040.png",
+    "submitted_actions": [
+      "pyautogui.click(251, 127, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 2,
+        "action_timestamp": "20261107@195047",
+        "action": "pyautogui.click(251, 127, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_2_20261107@195047.png",
+        "traj_line_1_based": 2
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 2,
+    "traj_step_num": 3,
+    "before_screenshot": "step_2_20261107@195047.png",
+    "submitted_actions": [
+      "pyautogui.write('alexi.riviero@gmail.com', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 3,
+        "action_timestamp": "20261107@195053",
+        "action": "pyautogui.write('alexi.riviero@gmail.com', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_3_20261107@195053.png",
+        "traj_line_1_based": 3
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 3,
+    "traj_step_num": 4,
+    "before_screenshot": "step_3_20261107@195053.png",
+    "submitted_actions": [
+      "pyautogui.click(599, 260, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 4,
+        "action_timestamp": "20261107@195101",
+        "action": "pyautogui.click(599, 260, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_4_20261107@195101.png",
+        "traj_line_1_based": 4
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 4,
+    "traj_step_num": 5,
+    "before_screenshot": "step_4_20261107@195101.png",
+    "submitted_actions": [
+      "pyautogui.write('Confidential Slides', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 5,
+        "action_timestamp": "20261107@195107",
+        "action": "pyautogui.write('Confidential Slides', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_5_20261107@195107.png",
+        "traj_line_1_based": 5
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 5,
+    "traj_step_num": 6,
+    "before_screenshot": "step_5_20261107@195107.png",
+    "submitted_actions": [
+      "pyautogui.click(524, 449, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 6,
+        "action_timestamp": "20261107@195114",
+        "action": "pyautogui.click(524, 449, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_6_20261107@195114.png",
+        "traj_line_1_based": 6
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 6,
+    "traj_step_num": 7,
+    "before_screenshot": "step_6_20261107@195114.png",
+    "submitted_actions": [
+      "pyautogui.write('Dear Alex,\\n\\nPlease find attached the confidential slides as discussed. These materials contain sensitive information and should be handled accordingly.\\n\\nKindly review them at your earliest convenience. Please ensure they are kept confidential and not shared with unauthorized parties.\\n\\nBest regards', interval=0.02)"
+    ],
+    "executed_events": [
+      {
+        "step_num": 7,
+        "action_timestamp": "20261107@195120",
+        "action": "pyautogui.write('Dear Alex,\\n\\nPlease find attached the confidential slides as discussed. These materials contain sensitive information and should be handled accordingly.\\n\\nKindly review them at your earliest convenience. Please ensure they are kept confidential and not shared with unauthorized parties.\\n\\nBest regards', interval=0.02)",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_7_20261107@195120.png",
+        "traj_line_1_based": 7
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 7,
+    "traj_step_num": 8,
+    "before_screenshot": "step_7_20261107@195120.png",
+    "submitted_actions": [
+      "pyautogui.click(660, 855, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 8,
+        "action_timestamp": "20261107@195134",
+        "action": "pyautogui.click(660, 855, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_8_20261107@195134.png",
+        "traj_line_1_based": 8
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 8,
+    "traj_step_num": 9,
+    "before_screenshot": "step_8_20261107@195134.png",
+    "submitted_actions": [
+      "pyautogui.click(412, 130, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 9,
+        "action_timestamp": "20261107@195141",
+        "action": "pyautogui.click(412, 130, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_9_20261107@195141.png",
+        "traj_line_1_based": 9
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 9,
+    "traj_step_num": 10,
+    "before_screenshot": "step_9_20261107@195141.png",
+    "submitted_actions": [
+      "pyautogui.click(1224, 46, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 10,
+        "action_timestamp": "20261107@195147",
+        "action": "pyautogui.click(1224, 46, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_10_20261107@195147.png",
+        "traj_line_1_based": 10
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 10,
+    "traj_step_num": 11,
+    "before_screenshot": "step_10_20261107@195147.png",
+    "submitted_actions": [
+      "DONE"
+    ],
+    "executed_events": [
+      {
+        "step_num": 11,
+        "action_timestamp": "20261107@195154",
+        "action": "DONE",
+        "reward": 0,
+        "done": true,
+        "info": {
+          "done": true
+        },
+        "screenshot_file": "step_11_20261107@195154.png",
+        "traj_line_1_based": 11
+      }
+    ]
+  }
+]

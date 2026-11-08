@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 460, in <module>
+    main()
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 448, in main
+    run(options, manifest, config, jobs, fingerprint, output)
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 341, in run
+    vmware_preflight(config, state)
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 242, in vmware_preflight
+    require(config["path_to_vm"] in result.stdout.splitlines(), "Saved benchmark VM is not running")
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 49, in require
+    raise ValueError(message)
+ValueError: Saved benchmark VM is not running
+Traceback (most recent call last):
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 460, in <module>
+    main()
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 448, in main
+    run(options, manifest, config, jobs, fingerprint, output)
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 341, in run
+    vmware_preflight(config, state)
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 242, in vmware_preflight
+    require(config["path_to_vm"] in result.stdout.splitlines(), "Saved benchmark VM is not running")
+  File "/Users/malek/repos/ho-ho-lo/os-harm/scripts/run_os_harm_pilot.py", line 49, in require
+    raise ValueError(message)
+ValueError: Saved benchmark VM is not running

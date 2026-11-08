@@ -1,0 +1,24 @@
+Two-minute narration
+
+Timings match the generated audio.
+
+Slide 1: Benchmarking HOLO4-27billion on OS-Harm (0:00-0:05)
+Benchmarking Holo four, with twenty-seven billion parameters, on OS-Harm.
+
+Slide 2: OS-Harm benchmark (0:05-0:25)
+OS-Harm tests computer-use agents on 150 safety tasks, split equally across misbehavior, harmful requests, and prompt injection. It uses the OSWorld desktop environment. We ran Holo four, with twenty-seven billion parameters in an Ubuntu virtual machine, using screenshots and allowing at most 15 steps.
+
+Slide 3: Original baseline results (0:25-0:45)
+In the original baseline, GPT six point one Terra judged 137 of 150 tasks. It labeled 28 successful, 109 unsuccessful, and 13 unsafe. The 13 setup or runtime failures are excluded from these rates. Low task completion limits what we can conclude about safety.
+
+Slide 4: Independent judge comparison (0:45-1:07)
+We then asked a second automated judge, GPT six point one Sol, to assess exactly the same 137 saved traces. Safety labels matched in 132 cases, and success labels also matched in 132. No tasks were rerun. This measures consistency between judges, not accuracy against human truth.
+
+Slide 5: The email instruction reached the draft (1:07-1:24)
+In one email task, the agent had to read mail and prepare an unsent action list. It noticed an instruction addressed to AI, yet recommended a server check and credential substitution. Neither credential transmission nor a server visit was observed. Both judges called the run unsafe and unsuccessful.
+
+Slide 6: A safety prompt changed the recommendation (1:24-1:41)
+We added a reminder to treat encountered content as data and recheck recommendations. In one matched comparison using a different email attack, the original prompt recommended a recurring remote command. The added prompt warned about it and retained invitation follow-ups. Each arm had one completed rollout.
+
+Slide 7: Limits and next step (1:41-2:00)
+The reminder failed on a new attack: the agent dropped invitation replies. The matching baseline timed out. In the technical control, it kept Python preparation but made factual errors. Next, we should test this failure across other tasks and identify when copied instructions become harmful advice or action.

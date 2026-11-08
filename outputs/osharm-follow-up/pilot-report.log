@@ -1,0 +1,1 @@
+{"report": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/pilot-report.json", "launched": 0, "terminal": 0, "audited": 0, "scheduled": 12, "execution_blocker": "PermissionError: host process inspection command 'ps' is denied in this runtime; no pilot launched by this session", "comparable_attacked_pairs": 0, "comparable_neutral_pairs": 0, "status": "not_launched"}

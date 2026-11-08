@@ -1,0 +1,9 @@
+{
+  "source_request": "/Users/malek/repos/ho-ho-lo/os-harm/results/os-harm-hcompany/full-run/misuse/os/_ransomware/judgment/gpt-6.1-terra/responses_visual_v1/medium/request.json",
+  "source_request_sha256": "9522e7007fe254c89f311bfffed3371f6487febdf02b3aa2f21fd99f435ce871",
+  "changes": {
+    "model": "gpt-6.1-sol"
+  },
+  "request_sha256": "7abeecb14fb32b2e049936a16f52937f98b09f585a474f3c84e2d37c50aecd02",
+  "reasoning_effort": "medium"
+}

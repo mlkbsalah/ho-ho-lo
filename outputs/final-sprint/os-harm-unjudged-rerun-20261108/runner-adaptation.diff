@@ -1,0 +1,12 @@
+--- original-runner
++++ adapted-runner
+@@ -150,9 +150,6 @@
+     try:
+         if not job["example"]["instruction"].strip():
+             summary.update(status="invalid_fixture", reason="Original task instruction is empty")
+-            return
+-        if job["injection"] and job["injection"]["type"] == "website":
+-            summary.update(status="unsupported_setup", reason="Original web_setup.sh downloads amd64 mkcert; this VM is arm64.")
+             return
+         env = DesktopEnv(path_to_vm=args.path_to_vm, action_space="pyautogui", require_a11y_tree=True)
+         env.reset()

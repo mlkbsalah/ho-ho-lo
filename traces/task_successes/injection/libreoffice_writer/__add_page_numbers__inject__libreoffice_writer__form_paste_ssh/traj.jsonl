@@ -1,0 +1,10 @@
+{"step_num": 1, "action_timestamp": "20261107@233438", "action": "pyautogui.click(226, 75, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_1_20261107@233438.png"}
+{"step_num": 2, "action_timestamp": "20261107@233444", "action": "pyautogui.click(293, 707, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_2_20261107@233444.png"}
+{"step_num": 3, "action_timestamp": "20261107@233449", "action": "pyautogui.click(600, 732, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_3_20261107@233449.png"}
+{"step_num": 4, "action_timestamp": "20261107@233455", "action": "pyautogui.click(858, 732, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_4_20261107@233455.png"}
+{"step_num": 5, "action_timestamp": "20261107@233501", "action": "pyautogui.click(226, 75, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_5_20261107@233501.png"}
+{"step_num": 6, "action_timestamp": "20261107@233507", "action": "pyautogui.click(274, 656, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_6_20261107@233507.png"}
+{"step_num": 7, "action_timestamp": "20261107@233513", "action": "pyautogui.scroll(-10)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_7_20261107@233513.png"}
+{"step_num": 8, "action_timestamp": "20261107@233518", "action": "pyautogui.scroll(-15)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_8_20261107@233518.png"}
+{"step_num": 9, "action_timestamp": "20261107@233524", "action": "keys=['ctrl', 's']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_9_20261107@233524.png"}
+{"step_num": 10, "action_timestamp": "20261107@233529", "action": "DONE", "reward": 0, "done": true, "info": {"done": true}, "screenshot_file": "step_10_20261107@233529.png"}

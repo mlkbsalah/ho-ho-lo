@@ -1,0 +1,302 @@
+[
+  {
+    "policy_index_zero_based": 0,
+    "traj_step_num": 1,
+    "before_screenshot": "step_0.png",
+    "submitted_actions": [
+      "pyautogui.click(32, 604, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 1,
+        "action_timestamp": "20261107@195407",
+        "action": "pyautogui.click(32, 604, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_1_20261107@195407.png",
+        "traj_line_1_based": 1
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 1,
+    "traj_step_num": 2,
+    "before_screenshot": "step_1_20261107@195407.png",
+    "submitted_actions": [
+      "pyautogui.click(341, 276, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 2,
+        "action_timestamp": "20261107@195415",
+        "action": "pyautogui.click(341, 276, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_2_20261107@195415.png",
+        "traj_line_1_based": 2
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 2,
+    "traj_step_num": 3,
+    "before_screenshot": "step_2_20261107@195415.png",
+    "submitted_actions": [
+      "pyautogui.click(341, 276, clicks=2, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 3,
+        "action_timestamp": "20261107@195422",
+        "action": "pyautogui.click(341, 276, clicks=2, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_3_20261107@195422.png",
+        "traj_line_1_based": 3
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 3,
+    "traj_step_num": 4,
+    "before_screenshot": "step_3_20261107@195422.png",
+    "submitted_actions": [
+      "pyautogui.click(159, 335, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 4,
+        "action_timestamp": "20261107@195431",
+        "action": "pyautogui.click(159, 335, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_4_20261107@195431.png",
+        "traj_line_1_based": 4
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 4,
+    "traj_step_num": 5,
+    "before_screenshot": "step_4_20261107@195431.png",
+    "submitted_actions": [
+      "pyautogui.click(936, 276, clicks=2, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 5,
+        "action_timestamp": "20261107@195438",
+        "action": "pyautogui.click(936, 276, clicks=2, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_5_20261107@195438.png",
+        "traj_line_1_based": 5
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 5,
+    "traj_step_num": 6,
+    "before_screenshot": "step_5_20261107@195438.png",
+    "submitted_actions": [
+      "pyautogui.click(441, 276, clicks=2, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 6,
+        "action_timestamp": "20261107@195445",
+        "action": "pyautogui.click(441, 276, clicks=2, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_6_20261107@195445.png",
+        "traj_line_1_based": 6
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 6,
+    "traj_step_num": 7,
+    "before_screenshot": "step_6_20261107@195445.png",
+    "submitted_actions": [
+      "pyautogui.click(370, 276, clicks=2, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 7,
+        "action_timestamp": "20261107@195459",
+        "action": "pyautogui.click(370, 276, clicks=2, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_7_20261107@195459.png",
+        "traj_line_1_based": 7
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 7,
+    "traj_step_num": 8,
+    "before_screenshot": "step_7_20261107@195459.png",
+    "submitted_actions": [
+      "pyautogui.click(1722, 111, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 8,
+        "action_timestamp": "20261107@195507",
+        "action": "pyautogui.click(1722, 111, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_8_20261107@195507.png",
+        "traj_line_1_based": 8
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 8,
+    "traj_step_num": 9,
+    "before_screenshot": "step_8_20261107@195507.png",
+    "submitted_actions": [
+      "pyautogui.click(159, 335, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 9,
+        "action_timestamp": "20261107@195515",
+        "action": "pyautogui.click(159, 335, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_9_20261107@195515.png",
+        "traj_line_1_based": 9
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 9,
+    "traj_step_num": 10,
+    "before_screenshot": "step_9_20261107@195515.png",
+    "submitted_actions": [
+      "pyautogui.click(345, 276, clicks=2, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 10,
+        "action_timestamp": "20261107@195521",
+        "action": "pyautogui.click(345, 276, clicks=2, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_10_20261107@195521.png",
+        "traj_line_1_based": 10
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 10,
+    "traj_step_num": 11,
+    "before_screenshot": "step_10_20261107@195521.png",
+    "submitted_actions": [
+      "pyautogui.click(180, 412, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 11,
+        "action_timestamp": "20261107@195527",
+        "action": "pyautogui.click(180, 412, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_11_20261107@195527.png",
+        "traj_line_1_based": 11
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 11,
+    "traj_step_num": 12,
+    "before_screenshot": "step_11_20261107@195527.png",
+    "submitted_actions": [
+      "pyautogui.click(180, 449, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 12,
+        "action_timestamp": "20261107@195533",
+        "action": "pyautogui.click(180, 449, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_12_20261107@195533.png",
+        "traj_line_1_based": 12
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 12,
+    "traj_step_num": 13,
+    "before_screenshot": "step_12_20261107@195533.png",
+    "submitted_actions": [
+      "pyautogui.click(570, 276, clicks=1, interval=0.15, button='right')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 13,
+        "action_timestamp": "20261107@195541",
+        "action": "pyautogui.click(570, 276, clicks=1, interval=0.15, button='right')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_13_20261107@195541.png",
+        "traj_line_1_based": 13
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 13,
+    "traj_step_num": 14,
+    "before_screenshot": "step_13_20261107@195541.png",
+    "submitted_actions": [
+      "pyautogui.click(647, 443, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 14,
+        "action_timestamp": "20261107@195548",
+        "action": "pyautogui.click(647, 443, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_14_20261107@195548.png",
+        "traj_line_1_based": 14
+      }
+    ]
+  },
+  {
+    "policy_index_zero_based": 14,
+    "traj_step_num": 15,
+    "before_screenshot": "step_14_20261107@195548.png",
+    "submitted_actions": [
+      "pyautogui.click(180, 488, clicks=1, interval=0.15, button='left')"
+    ],
+    "executed_events": [
+      {
+        "step_num": 15,
+        "action_timestamp": "20261107@195555",
+        "action": "pyautogui.click(180, 488, clicks=1, interval=0.15, button='left')",
+        "reward": 0,
+        "done": false,
+        "info": {},
+        "screenshot_file": "step_15_20261107@195555.png",
+        "traj_line_1_based": 15
+      }
+    ]
+  }
+]

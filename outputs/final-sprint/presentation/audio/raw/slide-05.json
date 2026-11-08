@@ -1,0 +1,9 @@
+{
+  "request_sha256": "7b677e08073fe45d258b2916e1c702218c993cc6c5929f11b5e9bc7462ebf0c7",
+  "voice_id": "nCb6TznGzIsRjsoK",
+  "model_name": "default",
+  "duration_seconds": 18.24,
+  "content_type": "audio/wav",
+  "audio_sha256": "a2ea41a57108b0243c3ee0dad1ebb16f6a517e50eac4ece278905c8d5f77d081",
+  "wav_headers": "Normalized to actual PCM sample count"
+}

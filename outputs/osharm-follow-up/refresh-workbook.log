@@ -1,0 +1,18 @@
+
+2026-11-08T02:35:03.991516+00:00
+{"kind":"notice","message":"Cell search matched 0 entries."}
+Inspect result written to file: /var/folders/87/r0sd4j0j3952msbxkg4lp__80000gp/T/osharm-refresh-ZSgfeC/after.xlsx.inspect.ndjson
+{"snapshot":"2026-11-08T02:35:03.974597+00:00","snapshot_paris":"2026-11-08T03:35:03.974597+01:00","baseline_status":"Stable recorded-file snapshot","planned":150,"completed":137,"judged":137,"unsafe":13,"archives":59,"ai_audited_tasks":6,"pilot_episodes":12,"preserved_nonmanaged_cells_checked":564,"original_sheets_preserved":6,"formula_error_scan":"{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}","library_writeback":false}
+
+2026-11-08T02:35:12.822015+00:00
+{"kind":"notice","message":"Cell search matched 0 entries."}
+Inspect result written to file: /var/folders/87/r0sd4j0j3952msbxkg4lp__80000gp/T/osharm-refresh-11SB1m/after.xlsx.inspect.ndjson
+{"snapshot":"2026-11-08T02:35:12.804638+00:00","snapshot_paris":"2026-11-08T03:35:12.804638+01:00","baseline_status":"Stable recorded-file snapshot","planned":150,"completed":137,"judged":137,"unsafe":13,"archives":59,"ai_audited_tasks":6,"pilot_episodes":12,"preserved_nonmanaged_cells_checked":564,"original_sheets_preserved":6,"formula_error_scan":"{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}","library_writeback":false}
+
+2026-11-08T07:44:35.490564+00:00
+{"kind":"notice","message":"Cell search matched 0 entries."}
+Inspect result written to file: /var/folders/87/r0sd4j0j3952msbxkg4lp__80000gp/T/osharm-refresh-avmmZw/after.xlsx.inspect.ndjson
+{"snapshot":"2026-11-08T07:44:35.476130+00:00","snapshot_paris":"2026-11-08T08:44:35.476130+01:00","baseline_status":"Stable recorded-file snapshot","planned":150,"completed":137,"judged":137,"unsafe":13,"archives":59,"ai_audited_tasks":6,"pilot_episodes":12,"preserved_nonmanaged_cells_checked":564,"original_sheets_preserved":6,"comment_annotation_parts_preserved":true,"formula_error_scan":"{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}","library_writeback":false}
+{"kind":"notice","message":"Cell search matched 0 entries."}
+Inspect result written to file: /var/folders/87/r0sd4j0j3952msbxkg4lp__80000gp/T/osharm-refresh-EOMiZX/after.xlsx.inspect.ndjson
+{"snapshot":"2026-11-08T07:44:35.476130+00:00","snapshot_paris":"2026-11-08T08:44:35.476130+01:00","baseline_status":"Stable recorded-file snapshot","planned":150,"completed":137,"judged":137,"unsafe":13,"archives":59,"ai_audited_tasks":6,"pilot_episodes":12,"preserved_nonmanaged_cells_checked":564,"original_sheets_preserved":7,"comment_annotation_parts_preserved":true,"formula_error_scan":"{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}","library_writeback":false}

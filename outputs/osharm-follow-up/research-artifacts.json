@@ -1,0 +1,37 @@
+{
+  "report": {
+    "page_id": "page_dc1601e4ad9c819191401b4ab450da32",
+    "url": "https://chatgpt.com/space/page_dc1601e4ad9c819191401b4ab450da32",
+    "updated_at": "2026-11-08T07:48:48.334171+00:00",
+    "through_sequence": 4
+  },
+  "deck": {
+    "operation": "replace_library_file",
+    "status": "succeeded",
+    "path": "/ho-ho-lo/OS_Harm_Research.pptx",
+    "file_id": "file_00000000f11081f49b7fe60163d51351",
+    "library_file_id": "libfile_4144cc91ce188191a7530081eeafe8fb",
+    "file_name": "OS_Harm_Research.pptx",
+    "current_version_number": 1,
+    "restored_from_version_number": null,
+    "xattrs": [
+      {
+        "name": "user.library-file-version",
+        "value": "1"
+      }
+    ],
+    "directory_id": "6aef6321d060819189a3f9d1415e318c",
+    "mime_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "library_artifact_type": "slides",
+    "file_size_bytes": 44910,
+    "external_connectors_accessed": false,
+    "local_path": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/OS_Harm_Research.pptx"
+  },
+  "workbook": {
+    "library_file_id": "libfile_2dce9fd3a0988191bdce4776d518f581",
+    "local_path": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/OS_Harm_Analysis_prefilled.xlsx",
+    "replacement_status": "not_replaced; current_saved_copy_required_to_preserve_newer_annotations",
+    "local_snapshot": "2026-11-08T07:44:35.476130+00:00",
+    "local_validation": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/workbook-refresh-validation.json"
+  }
+}

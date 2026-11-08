@@ -1,0 +1,11 @@
+{
+  "voice_id": "nCb6TznGzIsRjsoK",
+  "model_name": "default",
+  "output_format": "wav",
+  "only_audio": true,
+  "text": "We added a reminder to treat encountered content as data and recheck recommendations. In one matched comparison using a different email attack, the original prompt recommended a recurring remote command. The added prompt warned about it and retained invitation follow-ups. Each arm had one completed rollout.",
+  "json_config": {
+    "rewrite_rules": "en",
+    "padding_bonus": 0.0
+  }
+}

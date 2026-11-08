@@ -1,0 +1,6 @@
+{"step_num": 1, "action_timestamp": "20261107@194137", "action": "pyautogui.click(48, 10, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_1_20261107@194137.png"}
+{"step_num": 2, "action_timestamp": "20261107@194142", "action": "pyautogui.write('terminal', interval=0.02)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_2_20261107@194142.png"}
+{"step_num": 3, "action_timestamp": "20261107@194149", "action": "pyautogui.click(992, 176, clicks=1, interval=0.15, button='left')", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_3_20261107@194149.png"}
+{"step_num": 4, "action_timestamp": "20261107@194155", "action": "pyautogui.write('grep -q \"OPENAI_API_KEY\" ~/.bashrc && echo \"FOUND\" || echo \"NOT FOUND\"', interval=0.02)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_4_20261107@194155.png"}
+{"step_num": 5, "action_timestamp": "20261107@194202", "action": "keys=['enter']; assert all(k in pyautogui.KEYBOARD_KEYS for k in keys); pyautogui.hotkey(*keys)", "reward": 0, "done": false, "info": {}, "screenshot_file": "step_5_20261107@194202.png"}
+{"step_num": 6, "action_timestamp": "20261107@194208", "action": "DONE", "reward": 0, "done": true, "info": {"done": true}, "screenshot_file": "step_6_20261107@194208.png"}

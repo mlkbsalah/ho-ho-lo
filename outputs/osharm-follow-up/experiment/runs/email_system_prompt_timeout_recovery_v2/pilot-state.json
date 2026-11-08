@@ -1,0 +1,58 @@
+{
+  "status": "finished",
+  "pid": 18385,
+  "pilot_id": "email_system_prompt_timeout_recovery_v2",
+  "manifest_sha256": "10e2282f9cf02574bc2c872483577d4d0d5c3dcc240b3dde665197bb94ae0752",
+  "started_at": "2026-11-08T10:53:08.847232+00:00",
+  "retry_supervisor_sha256": "2bded15a0b2d2eef8242cdaaa593144e5c22e8c2c93835c560fff93e998690b5",
+  "launched_episodes": [
+    "01_dev_email_attacked_baseline",
+    "02_dev_email_attacked_intervention",
+    "04_dev_email_neutral_baseline"
+  ],
+  "completed_episodes": [
+    "01_dev_email_attacked_baseline",
+    "02_dev_email_attacked_intervention",
+    "03_dev_email_neutral_intervention",
+    "04_dev_email_neutral_baseline"
+  ],
+  "attempts": [
+    {
+      "episode_id": "01_dev_email_attacked_baseline",
+      "attempt": 1,
+      "started_at": "2026-11-08T10:53:09.342668+00:00",
+      "status": "trajectory_complete",
+      "finished_at": "2026-11-08T10:54:58.007032+00:00",
+      "path": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/email_system_prompt_timeout_recovery_v2/episodes/baseline/01_dev_email_attacked_baseline"
+    },
+    {
+      "episode_id": "02_dev_email_attacked_intervention",
+      "attempt": 1,
+      "started_at": "2026-11-08T10:55:06.068087+00:00",
+      "status": "trajectory_complete",
+      "finished_at": "2026-11-08T10:57:04.097624+00:00",
+      "path": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/email_system_prompt_timeout_recovery_v2/episodes/intervention/02_dev_email_attacked_intervention"
+    },
+    {
+      "episode_id": "04_dev_email_neutral_baseline",
+      "attempt": 1,
+      "started_at": "2026-11-08T10:57:09.036137+00:00",
+      "status": "trajectory_complete",
+      "finished_at": "2026-11-08T10:58:22.709216+00:00",
+      "path": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/email_system_prompt_timeout_recovery_v2/episodes/baseline/04_dev_email_neutral_baseline"
+    }
+  ],
+  "retained_results": {
+    "03_dev_email_neutral_intervention": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/email_system_prompt_four_cell_v1/episodes/intervention/03_dev_email_neutral_intervention"
+  },
+  "results": {
+    "01_dev_email_attacked_baseline": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/email_system_prompt_timeout_recovery_v2/episodes/baseline/01_dev_email_attacked_baseline",
+    "02_dev_email_attacked_intervention": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/email_system_prompt_timeout_recovery_v2/episodes/intervention/02_dev_email_attacked_intervention",
+    "04_dev_email_neutral_baseline": "/Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/email_system_prompt_timeout_recovery_v2/episodes/baseline/04_dev_email_neutral_baseline"
+  },
+  "child_pid": null,
+  "current_episode": null,
+  "current_attempt": null,
+  "unresolved_episodes": [],
+  "finished_at": "2026-11-08T10:58:28.257548+00:00"
+}

@@ -1,0 +1,9 @@
+Starting 01_unseen_override_baseline, recovery attempt 1
+Timeout retained at /Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/email_authority_diagnostic_v1/attempts/episodes/baseline/01_unseen_override_baseline/attempt-0001; retrying after 10 seconds
+Starting 01_unseen_override_baseline, recovery attempt 2
+Timeout retained at /Users/malek/repos/ho-ho-lo/outputs/osharm-follow-up/experiment/runs/email_authority_diagnostic_v1/attempts/episodes/baseline/01_unseen_override_baseline/attempt-0002; retrying after 10 seconds
+Starting 01_unseen_override_baseline, recovery attempt 3
+Retry cap reached for 01_unseen_override_baseline; timeout remains unresolved
+Starting 02_unseen_override_intervention, recovery attempt 1
+Starting 03_legitimate_technical_intervention, recovery attempt 1
+Starting 04_legitimate_technical_baseline, recovery attempt 1
